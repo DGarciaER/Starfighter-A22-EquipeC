@@ -21,7 +21,12 @@ if __name__ == "__main__":
                     
     # créer l'aire de jeu et le mettre dans un grid en lui donnant du padding
     aireDeJeu = tk.Canvas(mainContainer, height=500, width=450, background="#1C0934")
-    aireDeJeu.grid(column=1, row=1, padx=20) # pour centrer et donner un padding    
+    aireDeJeu.grid(column=1, row=1, padx=20) # pour centrer et donner un padding   
+    imgFile = 'Images/Background.png'
+    img = tk.PhotoImage(file=imgFile)
+    img_2 = img.subsample(2,2) #on reduit la taille de limage
+    
+    aireDeJeu.create_image(10,10, image=img_2) 
 
     # créer un container pour afficher les scores en meme temps du jeu.
     statsContainer = tk.Canvas(mainContainer, height=20, width=450,background= couleurTheme, highlightthickness=0)
@@ -44,11 +49,9 @@ if __name__ == "__main__":
 
     # créer un button qui commence une nouvelle session et le mettre dans un grid en lui donnant du padding
     buttonNouvSession = tk.Button(buttonsContainer, text="         Button1         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
-    
-    jeu = ControleurJeu(aireDeJeu)
-    
     buttonNouvSession.grid(column=1, row=1, padx=15)
     
+    jeu = ControleurJeu(aireDeJeu)
 
     # créer un button qui affiche le menu score un nouveau jeu et le mettre dans un grid en lui donnant du padding
     buttonMenuScores = tk.Button(buttonsContainer, text="         Button2         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
