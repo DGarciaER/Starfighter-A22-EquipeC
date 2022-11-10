@@ -47,7 +47,11 @@ if __name__ == "__main__":
 
     # créer un button qui commence une nouvelle session et le mettre dans un grid en lui donnant du padding
     buttonNouvSession = tk.Button(buttonsContainer, text="         Button1         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
+    
+    jeu = ControleurJeu(aireDeJeu)
+    
     buttonNouvSession.grid(column=1, row=1, padx=15)
+    
 
     # créer un button qui affiche le menu score un nouveau jeu et le mettre dans un grid en lui donnant du padding
     buttonMenuScores = tk.Button(buttonsContainer, text="         Button2         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
