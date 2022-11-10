@@ -1,4 +1,5 @@
 import tkinter as tk
+from ControleurJeu import ControleurJeu
 
 if __name__ == "__main__":
 
@@ -40,6 +41,9 @@ if __name__ == "__main__":
     buttonsContainer.grid(column=1, row=4, padx=10, pady=15) # pour centrer et donner un padding
 
     couleurButtons = "#E22866"
+
+    # # définir l'objet controleur
+    jeu = ControleurJeu(aireDeJeu)
 
     # créer un button qui commence une nouvelle session et le mettre dans un grid en lui donnant du padding
     buttonNouvSession = tk.Button(buttonsContainer, text="  Button1  ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
