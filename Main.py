@@ -14,7 +14,7 @@ if __name__ == "__main__":
     mainContainer.pack() # pour centrer et donner un padding
     
     # créer un titre de jeu et le mettre dans un grid en lui donnant du padding
-    titre = tk.Label(mainContainer, text="Star Fighter", fg='#FFFC33', background= couleurTheme)
+    titre = tk.Label(mainContainer, text="StarFighter", fg='#FFFC33', background= couleurTheme)
     titre.configure(font=("MV Boli", 25, "bold"))
     titre.grid(column=1, row=0, padx=10, pady=10)
                     
