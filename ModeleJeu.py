@@ -8,8 +8,8 @@ class CarreRouge:
         
         # initialisation du Carre Rouge
         couleur = '#ed4242'
-        self.carreRouge = c31.Carre(container, c31.Vecteur(225,225),self.tailleCarreRouge,0, couleur, couleur, 0)
-        self.imgFile = 'Images/Vaisseau.gif'
+        self.carreRouge = c31.Carre(container, c31.Vecteur(0.2,0.2),self.tailleCarreRouge,0, couleur, couleur, 0)
+        self.imgFile = 'Images/enemy.png'
         self.img = tk.PhotoImage(file=self.imgFile)
         
         #Evenement pour le carre
