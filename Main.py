@@ -7,7 +7,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.title("Star Fighter")
     root.config(background= couleurTheme)
-    root.geometry("500x680")
+    root.geometry("510x680")
 
     # créer un containter et le centrer dans la fenetre tk
     mainContainer = tk.Frame(root, background= couleurTheme)
