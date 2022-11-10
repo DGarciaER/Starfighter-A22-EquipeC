@@ -4,18 +4,16 @@ import tkinter as tk
 import c31Geometry2 as c31
 
 
+
 class ControleurJeu(tk.Frame):
     def __init__(self, container, window=None):
         super().__init__(window)
         self.vueJeu = VueJeu()
         self.window = window
-
+        
         self.carreRouge = CarreRouge(container)
-        self.vueJeu.afficherCarreRouge(self.carreRouge.carreRouge)
-        #Evenement pour le carre
-        self.carreRouge.carreRouge.canvas.bind("<Motion>", self.moveCR)
-
-
+        # self.carreRouge.carreRouge.canvas.bind("<Motion>", self.moveCR)
+        #self.vueJeu.afficherCarreRouge(self.carreRouge.carreRouge)
 
 
 
