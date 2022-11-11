@@ -1,4 +1,4 @@
-from ModeleJeu import CarreRouge
+from ModeleJeu import Vaisseau
 from VueJeu import VueJeu
 import tkinter as tk
 import c31Geometry2 as c31
@@ -11,8 +11,10 @@ class ControleurJeu(tk.Frame):
         self.vueJeu = VueJeu()
         self.window = window
         
-        self.carreRouge = CarreRouge(container)
-        # self.carreRouge.carreRouge.canvas.bind("<Motion>", self.moveCR)
+        #self.carreRouge = CarreRouge(container)
+        self.vaisseaux = Vaisseau(container)
+        self.vaisseaux.img_2.canvas
+        #self.carreRouge.carreRouge.canvas.bind("<Motion>", self.moveCR)
         #self.vueJeu.afficherCarreRouge(self.carreRouge.carreRouge)
 
 

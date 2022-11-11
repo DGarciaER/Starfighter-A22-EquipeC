@@ -6,6 +6,7 @@ class VueJeu:
         """Cette méthode affiche le carré rouge."""
         carreRouge.draw()
         
+        
     
              
     def clear(self, container):
