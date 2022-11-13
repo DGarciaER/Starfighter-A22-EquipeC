@@ -1,4 +1,7 @@
 import tkinter as tk
+from ControleurJeu import ControleurJeu
+from tkinter import *
+
 
 if __name__ == "__main__":
 
@@ -20,7 +23,12 @@ if __name__ == "__main__":
                     
     # créer l'aire de jeu et le mettre dans un grid en lui donnant du padding
     aireDeJeu = tk.Canvas(mainContainer, height=500, width=450, background="#1C0934")
-    aireDeJeu.grid(column=1, row=1, padx=20) # pour centrer et donner un padding    
+    aireDeJeu.grid(column=1, row=1, padx=20) # pour centrer et donner un padding   
+    imgFile = 'Images/Background.png'
+    img = tk.PhotoImage(file=imgFile)
+    img_2 = img.subsample(2,2) #on reduit la taille de limage
+    
+    aireDeJeu.create_image(10,10, image=img_2) 
 
     # créer un container pour afficher les scores en meme temps du jeu.
     statsContainer = tk.Canvas(mainContainer, height=20, width=450,background= couleurTheme, highlightthickness=0)
@@ -41,9 +49,15 @@ if __name__ == "__main__":
 
     couleurButtons = "#E22866"
 
+    # # définir l'objet controleur
+    jeu = ControleurJeu(aireDeJeu)
+
     # créer un button qui commence une nouvelle session et le mettre dans un grid en lui donnant du padding
     buttonNouvSession = tk.Button(buttonsContainer, text="         Button1         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
     buttonNouvSession.grid(column=1, row=1, padx=15)
+    
+    #aireDeJeu.bind('<Motion>', jeu.moveCR)
+    
 
     # créer un button qui affiche le menu score un nouveau jeu et le mettre dans un grid en lui donnant du padding
     buttonMenuScores = tk.Button(buttonsContainer, text="         Button2         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
@@ -53,5 +67,23 @@ if __name__ == "__main__":
     buttonQuitter = tk.Button(buttonsContainer, text="         Button3         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
     buttonQuitter.grid(column=3, row=1, padx=15)
     
+    #TEST SOURIS----------------------------------------------
+    
+
+    #Add Image To canvas
+    imgVaisseau = PhotoImage(file='Images/Vaisseau.png')
+    #img_3 = imgVaisseau.subsample(10,10)
+    my_img = aireDeJeu.create_image(260,125,anchor=NW,image=imgVaisseau)#x=0, y=0
+    
+
+
+    def move(event):
+        #global img
+        #imgVaisseau = PhotoImage(file='Images/Vaisseau.png')
+        my_img = aireDeJeu.create_image(event.x,event.y, image=imgVaisseau)#x=0, y=0
+        print(event.x)
+
+
+    aireDeJeu.bind('<Motion>', move)
     # boocler la fenetre tk
     root.mainloop()
