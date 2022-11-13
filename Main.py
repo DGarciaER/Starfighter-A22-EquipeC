@@ -7,6 +7,13 @@ if __name__ == "__main__":
 
     # créer une fenetre tk avec un titre, un background et des dimensions
     couleurTheme = "#41157A"
+
+    # un dictionnaire qui contient la longueur et la largeur du canvas Aire De Jeu.
+    tailleADJ = {
+        "height": 500,
+        "width": 450
+    } # Si je fait par exemple print(tailleADJ["height"]), le output va être 500.
+
     root = tk.Tk()
     root.title("Star Fighter")
     root.config(background= couleurTheme)
@@ -22,15 +29,16 @@ if __name__ == "__main__":
     titre.grid(column=1, row=0, padx=10, pady=10)
                     
     # créer l'aire de jeu et le mettre dans un grid en lui donnant du padding
-    aireDeJeu = tk.Canvas(mainContainer, height=500, width=450, background="#1C0934")
-    aireDeJeu.grid(column=1, row=1, padx=20) # pour centrer et donner un padding   
-    imgFile = 'Images/Background.png'
-    img = tk.PhotoImage(file=imgFile)
-    img_2 = img.subsample(2,2) #on reduit la taille de limage
-    
-    aireDeJeu.create_image(10,10, image=img_2) 
+    aireDeJeu = tk.Canvas(mainContainer, height=tailleADJ['height'], width=tailleADJ['width'])
+    aireDeJeu.grid(column=1, row=1, padx=20) # pour centrer et donner un padding
 
-    # créer un container pour afficher les scores en meme temps du jeu.
+    # Récupérer l'image de background et reduire sa taille avec la methode subsample() 
+    imgBackground = tk.PhotoImage(file='Images/Background.png').subsample(2,2)
+
+    # Mettre l'image de background dans le canva aireDeJeu
+    aireDeJeu.create_image(10,10, image=imgBackground) 
+
+    # créer un container pour afficher les statistiques en meme temps du jeu.
     statsContainer = tk.Canvas(mainContainer, height=20, width=450,background= couleurTheme, highlightthickness=0)
     statsContainer.grid(column=1, row=3, padx=10, pady=5) # pour centrer et donner un padding
 
@@ -55,9 +63,6 @@ if __name__ == "__main__":
     # créer un button qui commence une nouvelle session et le mettre dans un grid en lui donnant du padding
     buttonNouvSession = tk.Button(buttonsContainer, text="         Button1         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
     buttonNouvSession.grid(column=1, row=1, padx=15)
-    
-    #aireDeJeu.bind('<Motion>', jeu.moveCR)
-    
 
     # créer un button qui affiche le menu score un nouveau jeu et le mettre dans un grid en lui donnant du padding
     buttonMenuScores = tk.Button(buttonsContainer, text="         Button2         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
@@ -66,24 +71,40 @@ if __name__ == "__main__":
     # créer un button quitte du programme et le mettre dans un grid en lui donnant du padding
     buttonQuitter = tk.Button(buttonsContainer, text="         Button3         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
     buttonQuitter.grid(column=3, row=1, padx=15)
+
+
+    # NOTE cette partie ne doit pas être dans le fichier main
+    # DÉBUT DE PARTIE
+
+    #Récupérer l'image de Vaisseau et reduire sa taille avec la méthode subsample
+    imgVaisseau = PhotoImage(file='Images/Vaisseau.png').subsample(2,2)
+
+    # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
+    instanceVaisseau = aireDeJeu.create_image((tailleADJ['width'] - imgVaisseau.width())/2,400,anchor=NW,image=imgVaisseau)#x=0, y=0
     
-    #TEST SOURIS----------------------------------------------
-    
+    #Récupérer l'image de Ovni et reduire sa taille avec la méthode subsample
+    imgOvni = PhotoImage(file='Images/ovni.png').subsample(4,4)
 
-    #Add Image To canvas
-    imgVaisseau = PhotoImage(file='Images/Vaisseau.png')
-    #img_3 = imgVaisseau.subsample(10,10)
-    my_img = aireDeJeu.create_image(260,125,anchor=NW,image=imgVaisseau)#x=0, y=0
-    
+    # Créer une instance de Ovni et l'afficher dans l'aire de jeu en lui donnant une position x, y
+    instanceOvni = aireDeJeu.create_image((tailleADJ['width'] - imgOvni.width())/2,90,anchor=NW,image=imgOvni)#x=0, y=0
+
+    def move(e):
+
+        global imgVaisseau
+        # On ajoute cette ligne pour ne pas dupliquer des vaisseaux en utilisant toujours le même vaisseau
+
+        #Récupérer l'image de Vaisseau et reduire sa taille avec la méthode subsample
+        imgVaisseau = PhotoImage(file='Images/Vaisseau.png').subsample(2,2)
+
+        # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
+        instanceVaisseau = aireDeJeu.create_image(e.x,e.y, image=imgVaisseau)#x=0, y=0
 
 
-    def move(event):
-        #global img
-        #imgVaisseau = PhotoImage(file='Images/Vaisseau.png')
-        my_img = aireDeJeu.create_image(event.x,event.y, image=imgVaisseau)#x=0, y=0
-        print(event.x)
 
-
+    # Quand on clique sur le vaisseau et bouge le souris
     aireDeJeu.bind('<Motion>', move)
+    
+    # FIN DE PARTIE
+
     # boocler la fenetre tk
     root.mainloop()
