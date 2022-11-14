@@ -1,6 +1,7 @@
 import tkinter as tk
 from ControleurJeu import ControleurJeu
 from tkinter import *
+import threading
 
 
 if __name__ == "__main__":
@@ -88,6 +89,12 @@ if __name__ == "__main__":
     # Créer une instance de Ovni et l'afficher dans l'aire de jeu en lui donnant une position x, y
     instanceOvni = aireDeJeu.create_image((tailleADJ['width'] - imgOvni.width())/2,90,anchor=NW,image=imgOvni)#x=0, y=0
 
+    #Creer un missile
+    laserImg = PhotoImage(file='Images/missile.png')
+    
+
+    
+    #fait bouger le vaisseau
     def move(e):
 
         global imgVaisseau
@@ -101,8 +108,31 @@ if __name__ == "__main__":
 
 
 
+    def moveLaser():
+        global laser, missileLoop
+        #fait monter le missile de 10 px toute les 10 ms
+        aireDeJeu.move(laser, 0, -10)
+        #rappel la fonction toutes les 100ms
+        missileLoop = root.after(10, moveLaser)
+        
+
+    def shoot(event):
+        global laser, missileLoop
+        try:
+            root.after_cancel(missileLoop)
+            aireDeJeu.delete(laser)
+            laser = aireDeJeu.create_image(event.x,event.y, image=laserImg)
+            moveLaser()
+        except NameError:
+            laser = aireDeJeu.create_image(event.x,event.y, image=laserImg)
+            moveLaser()
+   
+
     # Quand on clique sur le vaisseau et bouge le souris
     aireDeJeu.bind('<Motion>', move)
+
+    #quand on click sur le vaisseau quelque chose se passe
+    aireDeJeu.bind('<Button-1>', shoot)
     
     # FIN DE PARTIE
 
