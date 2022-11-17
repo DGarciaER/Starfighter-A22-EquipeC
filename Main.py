@@ -119,9 +119,22 @@ if __name__ == "__main__":
 
         
 
-    def shoot(event):
+    def shootMissile(event):
         listMissile.append(Missile(aireDeJeu, event.x, event.y))
+
+    def shootLaser(event):
+        listLaser.append(Laser(aireDeJeu, (event.x + imageV.width()/4 + 2), 0, (event.x + imageV.width()/4), event.y))
+        listLaser.append(Laser(aireDeJeu, (event.x - imageV.width()/4 + 2), 0, (event.x - imageV.width()/4), event.y))
+        
+        wait = Timer(1, deleteLaser)
+        wait.start()
    
+    def deleteLaser():
+        aireDeJeu.canva.delete(listLaser[1].rectangleLaser)
+        del listLaser[1]
+        aireDeJeu.canva.delete(listLaser[0].rectangleLaser)   
+        del listLaser[0]
+        print('laser deleted')
 
     # # Quand on clique sur le vaisseau et bouge le souris
     aireDeJeu.canva.bind('<Motion>', moveVaisseau)
