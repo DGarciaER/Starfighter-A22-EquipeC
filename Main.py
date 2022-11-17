@@ -1,6 +1,6 @@
 import tkinter as tk
 from ControleurJeu import ControleurJeu
-from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile
+from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile, Laser
 from VueJeu import VueJeu
 from tkinter import *
 import threading
@@ -78,6 +78,7 @@ if __name__ == "__main__":
     buttonQuitter.grid(column=3, row=1, padx=15)
 
     listMissile = []
+    listLaser = []
 
 
     # instanceV = vaisseau.instanceVaisseau
@@ -118,15 +119,20 @@ if __name__ == "__main__":
 
         
 
-    def shoot(event):
+    def shootMissile(event):
         listMissile.append(Missile(aireDeJeu, event.x, event.y))
+
+    def shootLaser(event):
+        listLaser.append(Laser(aireDeJeu, event.x, event.y))
    
 
     # # Quand on clique sur le vaisseau et bouge le souris
     aireDeJeu.canva.bind('<Motion>', moveVaisseau)
 
     # #quand on click sur le vaisseau quelque chose se passe
-    aireDeJeu.canva.bind('<Button-1>', shoot)
+    aireDeJeu.canva.bind('<Button-1>', shootMissile)
+
+    aireDeJeu.canva.bind('<Double-Button-1>', shootLaser)
 
     wait = Timer(0.03,moveMissile)
     wait.start()

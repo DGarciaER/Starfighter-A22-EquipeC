@@ -28,6 +28,13 @@ class Missile:
         self.imageMissile = tk.PhotoImage(file='Images/missile.png').subsample(3,3)
         self.instanceMissile = container.canva.create_image(self.x, self.y, image=self.imageMissile)
 
+class Laser:
+    def __init__(self,container, x, y):
+        self.x = x
+        self.y = y
+        # self.imageMissile = tk.PhotoImage(file='Images/missile.png').subsample(3,3)
+        # self.instanceMissile = container.canva.create_image(self.x, self.y, image=self.imageMissile)
+
 class Ovni:
     def __init__(self,container, x, y):
         self.x = x
