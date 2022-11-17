@@ -1,7 +1,6 @@
 import tkinter as tk
 from ControleurJeu import ControleurJeu
-from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile, Asteroide
-from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile, Laser
+from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile, Asteroide, Laser
 from VueJeu import VueJeu
 from tkinter import *
 import threading
