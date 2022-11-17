@@ -1,32 +1,38 @@
-import c31Geometry2 as c31
 import tkinter as tk
 
-# class CarreRouge:
-#     tailleCarreRouge = 40
-    
-#     def __init__(self, container):
-        
-#         # initialisation du Carre Rouge
-#         couleur = '#ed4242'
-#         self.carreRouge = c31.Carre(container, c31.Vecteur(225,225),self.tailleCarreRouge,0, couleur, couleur, 0)
-#         self.imgFile = 'Images/Vaisseau.gif'
-#         self.img = tk.PhotoImage(file=self.imgFile)
-        
-#         #Evenement pour le carre
-#         self.img_2 = self.img.subsample(12,12) #on reduit la taille de limage
-#         # self.image = 
-        
-#         self.carreRouge.canvas.create_image(10,10,anchor=tk.NW, image=self.img_2)
+class AireDeJeu:
+    def __init__(self, container):
+        self.height = 500
+        self.width = 450 
+        self.imageBackground = tk.PhotoImage(file='Images/Background.png').subsample(2,2)
 
-# class Vaisseau:
-#     def __init__(self, container):
-        
-#         self.imgFile = 'Images/Vaisseau.gif'
-#         self.img = tk.PhotoImage(file=self.imgFile)
-#         self.img_2 = self.img.subsample(12,12) #on reduit la taille de limage
-#         self.img_2.
-        
+        self.canva = tk.Canvas(container, height=self.height, width=self.width)
+        self.canva.create_image(10,10, image=self.imageBackground)
+        self.canva.grid(column=1, row=1, padx=20) # pour centrer et donner un padding
+
+class Vaiseau:
+    def __init__(self, container):
+        self.imageVaisseau = tk.PhotoImage(file='Images/Vaisseau.png').subsample(2,2)
+        self.x = 0
+        self.y = 0
+
+    def setPositions(self,x,y):
+        self.x = x
+        self.y = y
 
 
+class Missile:
+    def __init__(self,container, x, y):
+        self.x = x
+        self.y = y
+        self.imageMissile = tk.PhotoImage(file='Images/missile.png').subsample(3,3)
+        self.instanceMissile = container.canva.create_image(self.x, self.y, image=self.imageMissile)
 
-
+class Ovni:
+    def __init__(self,container, x, y):
+        self.x = x
+        self.y = y
+        self.imageOvni = tk.PhotoImage(file='Images/ovni.png').subsample(4,4)
+        self.instanceOvni = container.canva.create_image(self.x,self.y,anchor=tk.NW,image=self.imageOvni)
+        
+        

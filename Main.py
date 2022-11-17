@@ -1,7 +1,11 @@
 import tkinter as tk
 from ControleurJeu import ControleurJeu
+from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile
+from VueJeu import VueJeu
 from tkinter import *
 import threading
+import random
+from threading import Timer
 
 
 if __name__ == "__main__":
@@ -9,11 +13,12 @@ if __name__ == "__main__":
     # créer une fenetre tk avec un titre, un background et des dimensions
     couleurTheme = "#41157A"
 
-    # un dictionnaire qui contient la longueur et la largeur du canvas Aire De Jeu.
-    tailleADJ = {
-        "height": 500,
-        "width": 450
-    } # Si je fait par exemple print(tailleADJ["height"]), le output va être 500.
+     # Si je fait par exemple print(tailleADJ["height"]), le output va être 500.
+
+
+    def randomPosition():
+        return random.randint(0, 500)
+
 
     root = tk.Tk()
     root.title("Star Fighter")
@@ -30,14 +35,13 @@ if __name__ == "__main__":
     titre.grid(column=1, row=0, padx=10, pady=10)
                     
     # créer l'aire de jeu et le mettre dans un grid en lui donnant du padding
-    aireDeJeu = tk.Canvas(mainContainer, height=tailleADJ['height'], width=tailleADJ['width'])
-    aireDeJeu.grid(column=1, row=1, padx=20) # pour centrer et donner un padding
+   
+    aireDeJeu = AireDeJeu(mainContainer)
+    vaisseau = Vaiseau(aireDeJeu)
 
-    # Récupérer l'image de background et reduire sa taille avec la methode subsample() 
-    imgBackground = tk.PhotoImage(file='Images/Background.png').subsample(2,2)
+    listeOvnis = []
+    ovni = Ovni(aireDeJeu, randomPosition(),-3)
 
-    # Mettre l'image de background dans le canva aireDeJeu
-    aireDeJeu.create_image(10,10, image=imgBackground) 
 
     # créer un container pour afficher les statistiques en meme temps du jeu.
     statsContainer = tk.Canvas(mainContainer, height=20, width=450,background= couleurTheme, highlightthickness=0)
@@ -59,7 +63,7 @@ if __name__ == "__main__":
     couleurButtons = "#E22866"
 
     # # définir l'objet controleur
-    jeu = ControleurJeu(aireDeJeu)
+    jeu = ControleurJeu(aireDeJeu.canva)
 
     # créer un button qui commence une nouvelle session et le mettre dans un grid en lui donnant du padding
     buttonNouvSession = tk.Button(buttonsContainer, text="         Button1         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
@@ -73,66 +77,60 @@ if __name__ == "__main__":
     buttonQuitter = tk.Button(buttonsContainer, text="         Button3         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
     buttonQuitter.grid(column=3, row=1, padx=15)
 
+    listMissile = []
 
-    # NOTE cette partie ne doit pas être dans le fichier main
-    # DÉBUT DE PARTIE
 
-    #Récupérer l'image de Vaisseau et reduire sa taille avec la méthode subsample
-    imgVaisseau = PhotoImage(file='Images/Vaisseau.png').subsample(2,2)
+    # instanceV = vaisseau.instanceVaisseau
+    imageV = vaisseau.imageVaisseau
+   
+    def moveVaisseau(e):
 
-    # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
-    instanceVaisseau = aireDeJeu.create_image((tailleADJ['width'] - imgVaisseau.width())/2,400,anchor=NW,image=imgVaisseau)#x=0, y=0
-    
-    #Récupérer l'image de Ovni et reduire sa taille avec la méthode subsample
-    imgOvni = PhotoImage(file='Images/ovni.png').subsample(4,4)
-
-    # Créer une instance de Ovni et l'afficher dans l'aire de jeu en lui donnant une position x, y
-    instanceOvni = aireDeJeu.create_image((tailleADJ['width'] - imgOvni.width())/2,90,anchor=NW,image=imgOvni)#x=0, y=0
-
-    #Creer un missile
-    laserImg = PhotoImage(file='Images/missile.png')
-    
-
-    
-    #fait bouger le vaisseau
-    def move(e):
-
-        global imgVaisseau
+        global imageV
         # On ajoute cette ligne pour ne pas dupliquer des vaisseaux en utilisant toujours le même vaisseau
 
         #Récupérer l'image de Vaisseau et reduire sa taille avec la méthode subsample
-        imgVaisseau = PhotoImage(file='Images/Vaisseau.png').subsample(2,2)
+
 
         # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
-        instanceVaisseau = aireDeJeu.create_image(e.x,e.y, image=imgVaisseau)#x=0, y=0
+        imageV = tk.PhotoImage(file='Images/Vaisseau.png').subsample(2,2)
 
+        instanceV = aireDeJeu.canva.create_image(e.x,e.y, image=imageV)#x=0, y=0
+        vaisseau.setPositions(e.x,e.y)
 
+        print(vaisseau.x)
+        print(vaisseau.y)
+        # vaisseau.x = e.x
+        # vaisseau.y = e.y
+        
 
-    def moveLaser():
-        global laser, missileLoop
-        #fait monter le missile de 10 px toute les 10 ms
-        aireDeJeu.move(laser, 0, -10)
-        #rappel la fonction toutes les 100ms
-        missileLoop = root.after(10, moveLaser)
+    def moveMissile():
+        for missile in listMissile:
+            aireDeJeu.canva.move(missile.instanceMissile, 0, -10)
+            missile.y -=10
+
+            if missile.y <= 0:
+                aireDeJeu.canva.delete(missile.instanceMissile)
+                listMissile.remove(missile)
+                print('deleted')
+
+        wait = Timer(0.03,moveMissile)
+        wait.start()
+
         
 
     def shoot(event):
-        global laser, missileLoop
-        try:
-            root.after_cancel(missileLoop)
-            aireDeJeu.delete(laser)
-            laser = aireDeJeu.create_image(event.x,event.y, image=laserImg)
-            moveLaser()
-        except NameError:
-            laser = aireDeJeu.create_image(event.x,event.y, image=laserImg)
-            moveLaser()
+        listMissile.append(Missile(aireDeJeu, event.x, event.y))
    
 
-    # Quand on clique sur le vaisseau et bouge le souris
-    aireDeJeu.bind('<Motion>', move)
+    # # Quand on clique sur le vaisseau et bouge le souris
+    aireDeJeu.canva.bind('<Motion>', moveVaisseau)
 
-    #quand on click sur le vaisseau quelque chose se passe
-    aireDeJeu.bind('<Button-1>', shoot)
+    # #quand on click sur le vaisseau quelque chose se passe
+    aireDeJeu.canva.bind('<Button-1>', shoot)
+
+    wait = Timer(0.03,moveMissile)
+    wait.start()
+    
     
     # FIN DE PARTIE
 
