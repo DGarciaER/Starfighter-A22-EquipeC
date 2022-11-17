@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
 
         # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
-        imageV = tk.PhotoImage(file='Images/Vaisseau.png').subsample(2,2)
+        imageV = tk.PhotoImage(file='Images/Vaisseau.png').subsample(12,12)
 
         instanceV = aireDeJeu.canva.create_image(e.x,e.y, image=imageV)#x=0, y=0
         vaisseau.setPositions(e.x,e.y)
@@ -119,11 +119,8 @@ if __name__ == "__main__":
 
         
 
-    def shootMissile(event):
+    def shoot(event):
         listMissile.append(Missile(aireDeJeu, event.x, event.y))
-
-    def shootLaser(event):
-        listLaser.append(Laser(aireDeJeu, event.x, event.y))
    
 
     # # Quand on clique sur le vaisseau et bouge le souris
