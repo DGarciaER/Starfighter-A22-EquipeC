@@ -1,6 +1,6 @@
 import tkinter as tk
 from ControleurJeu import ControleurJeu
-from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile
+from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile, Asteroide
 from VueJeu import VueJeu
 from tkinter import *
 import threading
@@ -42,6 +42,7 @@ if __name__ == "__main__":
     listeOvnis = []
     ovni = Ovni(aireDeJeu, randomPosition(),-3)
 
+    
 
     # créer un container pour afficher les statistiques en meme temps du jeu.
     statsContainer = tk.Canvas(mainContainer, height=20, width=450,background= couleurTheme, highlightthickness=0)
@@ -78,6 +79,7 @@ if __name__ == "__main__":
     buttonQuitter.grid(column=3, row=1, padx=15)
 
     listMissile = []
+    listAsteroide = []
 
 
     # instanceV = vaisseau.instanceVaisseau
@@ -120,6 +122,51 @@ if __name__ == "__main__":
 
     def shoot(event):
         listMissile.append(Missile(aireDeJeu, event.x, event.y))
+
+    x = 0 
+    imageA = vaisseau.imageVaisseau 
+    def createAsteroide():
+        
+        if random.randint(1,2) == 0:
+            
+            x = random.randint(25,200)
+            print(x)
+            listAsteroide.append(Asteroide(aireDeJeu,x,-40,"bas-droit"))
+
+        else:
+            x = random.randint(250,425)
+            listAsteroide.append(Asteroide(aireDeJeu,x,-40,"bas-gauche"))
+
+
+        waitA = Timer(3, createAsteroide)
+        waitA.start()
+
+
+    def moveAsteroide():
+        
+        for aste in listAsteroide:
+            aireDeJeu.canva.move(aste.instanceAsteroide,5 , 5)
+            aste.y += 5
+            if aste.direction == "bas-droit":
+                aste.x += 5
+            elif aste.direction == "bas-gauche":
+                aste.x -= 5
+
+            if aste.y >= 500:
+                aireDeJeu.canva.delete(aste.instanceAsteroide)
+                listAsteroide.remove(aste)
+
+            
+                
+                print('deleted')
+            
+
+        newWait = Timer(0.03, moveAsteroide)
+        newWait.start()
+        
+        
+        
+
    
 
     # # Quand on clique sur le vaisseau et bouge le souris
@@ -130,7 +177,10 @@ if __name__ == "__main__":
 
     wait = Timer(0.03,moveMissile)
     wait.start()
-    
+    waitA = Timer(3, createAsteroide)
+    waitA.start()
+    waitA = Timer(0.03, moveAsteroide)
+    waitA.start()
     
     # FIN DE PARTIE
 

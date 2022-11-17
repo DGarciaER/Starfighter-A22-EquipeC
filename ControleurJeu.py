@@ -53,7 +53,7 @@ class Mouvement:
 
     #fait bouger le vaisseau
     def moveVaisseau(self,e):
-
+        pass
         # global imgVaisseau
         # On ajoute cette ligne pour ne pas dupliquer des vaisseaux en utilisant toujours le même vaisseau
 
@@ -61,9 +61,12 @@ class Mouvement:
 
 
         # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
-        instanceVaisseau = aireDeJeu.create_image(e.x,e.y, image=imgVaisseau)#x=0, y=0
-        self.positionVaiseau['x'] = e.x
-        self.positionVaiseau['y'] = e.y
+        # instanceVaisseau = aireDeJeu.create_image(e.x,e.y, image=imgVaisseau)#x=0, y=0
+        # self.positionVaiseau['x'] = e.x
+        # self.positionVaiseau['y'] = e.y
+
+    # def moveAsteroid(self,e):
+    #     instanceAsteroid  = aireDe
 
 
                 
