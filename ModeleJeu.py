@@ -44,4 +44,12 @@ class Ovni:
         self.imageOvni = tk.PhotoImage(file='Images/ovni.png').subsample(4,4)
         self.instanceOvni = container.canva.create_image(self.x,self.y,anchor=tk.NW,image=self.imageOvni)
         
+class Asteroide:
+    def __init__(self,container, x, y, direction):
+        self.x = x
+        self.y = y
+        self.direction = direction
+        self.imageAsteroide = tk.PhotoImage(file='Images/asteroide.gif').subsample(4,4)
+        self.instanceAsteroide = container.canva.create_image(self.x, self.y, anchor=tk.NW,image=self.imageAsteroide)
+        
         
