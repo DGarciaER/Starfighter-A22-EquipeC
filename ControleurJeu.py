@@ -9,7 +9,7 @@ import c31Geometry2 as c31
 class ControleurJeu(tk.Frame):
     def __init__(self, container, window=None):
         super().__init__(window)
-        self.vueJeu = VueJeu()
+        # self.vueJeu = VueJeu()
         self.window = window
         
         #self.carreRouge = CarreRouge(container)
@@ -44,6 +44,27 @@ class ControleurJeu(tk.Frame):
         # self.carreRouge.carreRouge.translateTo(c31.Vecteur(e.x, e.y))
         # self.carreRouge.carreRouge.set_position(c31.Vecteur(e.x,e.y))
         # self.vueJeu.afficherCarreRouge(self.carreRouge.carreRouge)
+
+class Mouvement:
+    def __init__(self):
+        pass
+
+
+
+    #fait bouger le vaisseau
+    def moveVaisseau(self,e):
+
+        # global imgVaisseau
+        # On ajoute cette ligne pour ne pas dupliquer des vaisseaux en utilisant toujours le même vaisseau
+
+        #Récupérer l'image de Vaisseau et reduire sa taille avec la méthode subsample
+
+
+        # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
+        instanceVaisseau = aireDeJeu.create_image(e.x,e.y, image=imgVaisseau)#x=0, y=0
+        self.positionVaiseau['x'] = e.x
+        self.positionVaiseau['y'] = e.y
+
 
                 
        

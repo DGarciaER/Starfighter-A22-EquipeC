@@ -1,12 +1,25 @@
 import tkinter as tk
 from ControleurJeu import ControleurJeu
+from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile, Laser
+from VueJeu import VueJeu
 from tkinter import *
+import threading
+import random
+from threading import Timer
 
 
 if __name__ == "__main__":
 
     # créer une fenetre tk avec un titre, un background et des dimensions
     couleurTheme = "#41157A"
+
+     # Si je fait par exemple print(tailleADJ["height"]), le output va être 500.
+
+
+    def randomPosition():
+        return random.randint(0, 500)
+
+
     root = tk.Tk()
     root.title("Star Fighter")
     root.config(background= couleurTheme)
@@ -22,15 +35,15 @@ if __name__ == "__main__":
     titre.grid(column=1, row=0, padx=10, pady=10)
                     
     # créer l'aire de jeu et le mettre dans un grid en lui donnant du padding
-    aireDeJeu = tk.Canvas(mainContainer, height=500, width=450, background="#1C0934")
-    aireDeJeu.grid(column=1, row=1, padx=20) # pour centrer et donner un padding   
-    imgFile = 'Images/Background.png'
-    img = tk.PhotoImage(file=imgFile)
-    img_2 = img.subsample(2,2) #on reduit la taille de limage
-    
-    aireDeJeu.create_image(10,10, image=img_2) 
+   
+    aireDeJeu = AireDeJeu(mainContainer)
+    vaisseau = Vaiseau(aireDeJeu)
 
-    # créer un container pour afficher les scores en meme temps du jeu.
+    listeOvnis = []
+    ovni = Ovni(aireDeJeu, randomPosition(),-3)
+
+
+    # créer un container pour afficher les statistiques en meme temps du jeu.
     statsContainer = tk.Canvas(mainContainer, height=20, width=450,background= couleurTheme, highlightthickness=0)
     statsContainer.grid(column=1, row=3, padx=10, pady=5) # pour centrer et donner un padding
 
@@ -50,14 +63,11 @@ if __name__ == "__main__":
     couleurButtons = "#E22866"
 
     # # définir l'objet controleur
-    jeu = ControleurJeu(aireDeJeu)
+    jeu = ControleurJeu(aireDeJeu.canva)
 
     # créer un button qui commence une nouvelle session et le mettre dans un grid en lui donnant du padding
     buttonNouvSession = tk.Button(buttonsContainer, text="         Button1         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
     buttonNouvSession.grid(column=1, row=1, padx=15)
-    
-    #aireDeJeu.bind('<Motion>', jeu.moveCR)
-    
 
     # créer un button qui affiche le menu score un nouveau jeu et le mettre dans un grid en lui donnant du padding
     buttonMenuScores = tk.Button(buttonsContainer, text="         Button2         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
@@ -66,24 +76,79 @@ if __name__ == "__main__":
     # créer un button quitte du programme et le mettre dans un grid en lui donnant du padding
     buttonQuitter = tk.Button(buttonsContainer, text="         Button3         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
     buttonQuitter.grid(column=3, row=1, padx=15)
+
+    listMissile = []
+    listLaser = []
+
+
+    # instanceV = vaisseau.instanceVaisseau
+    imageV = vaisseau.imageVaisseau
+   
+    def moveVaisseau(e):
+
+        global imageV
+        # On ajoute cette ligne pour ne pas dupliquer des vaisseaux en utilisant toujours le même vaisseau
+
+        #Récupérer l'image de Vaisseau et reduire sa taille avec la méthode subsample
+
+
+        # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
+        imageV = tk.PhotoImage(file='Images/Vaisseau.png').subsample(12,12)
+
+        instanceV = aireDeJeu.canva.create_image(e.x,e.y, image=imageV)#x=0, y=0
+        vaisseau.setPositions(e.x,e.y)
+
+        print(vaisseau.x)
+        print(vaisseau.y)
+        # vaisseau.x = e.x
+        # vaisseau.y = e.y
+        
+
+    def moveMissile():
+        for missile in listMissile:
+            aireDeJeu.canva.move(missile.instanceMissile, 0, -10)
+            missile.y -=10
+
+            if missile.y <= 0:
+                aireDeJeu.canva.delete(missile.instanceMissile)
+                listMissile.remove(missile)
+                print('deleted')
+
+        wait = Timer(0.03,moveMissile)
+        wait.start()
+
+        
+
+    def shootMissile(event):
+        listMissile.append(Missile(aireDeJeu, event.x, event.y))
+
+    def shootLaser(event):
+        listLaser.append(Laser(aireDeJeu, (event.x + imageV.width()/4 + 2), 0, (event.x + imageV.width()/4), event.y))
+        listLaser.append(Laser(aireDeJeu, (event.x - imageV.width()/4 + 2), 0, (event.x - imageV.width()/4), event.y))
+        
+        wait = Timer(1, deleteLaser)
+        wait.start()
+   
+    def deleteLaser():
+        aireDeJeu.canva.delete(listLaser[1].rectangleLaser)
+        del listLaser[1]
+        aireDeJeu.canva.delete(listLaser[0].rectangleLaser)   
+        del listLaser[0]
+        print('laser deleted')
+
+    # # Quand on clique sur le vaisseau et bouge le souris
+    aireDeJeu.canva.bind('<Motion>', moveVaisseau)
+
+    # #quand on click sur le vaisseau quelque chose se passe
+    aireDeJeu.canva.bind('<Button-1>', shootMissile)
+
+    aireDeJeu.canva.bind('<Double-Button-1>', shootLaser)
+
+    wait = Timer(0.03,moveMissile)
+    wait.start()
     
-    #TEST SOURIS----------------------------------------------
     
+    # FIN DE PARTIE
 
-    #Add Image To canvas
-    imgVaisseau = PhotoImage(file='Images/Vaisseau.png')
-    #img_3 = imgVaisseau.subsample(10,10)
-    my_img = aireDeJeu.create_image(260,125,anchor=NW,image=imgVaisseau)#x=0, y=0
-    
-
-
-    def move(event):
-        #global img
-        #imgVaisseau = PhotoImage(file='Images/Vaisseau.png')
-        my_img = aireDeJeu.create_image(event.x,event.y, image=imgVaisseau)#x=0, y=0
-        print(event.x)
-
-
-    aireDeJeu.bind('<Motion>', move)
     # boocler la fenetre tk
     root.mainloop()
