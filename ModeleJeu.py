@@ -9,10 +9,11 @@ class AireDeJeu:
         self.canva = tk.Canvas(container, height=self.height, width=self.width)
         self.canva.create_image(10,10, image=self.imageBackground)
         self.canva.grid(column=1, row=1, padx=20) # pour centrer et donner un padding
+        self.canva.config(cursor="none")
 
 class Vaiseau:
     def __init__(self, container):
-        self.imageVaisseau = tk.PhotoImage(file='Images/Vaisseau.png').subsample(2,2)
+        self.imageVaisseau = tk.PhotoImage(file='Images/Vaisseau.png').subsample(6,6)
         self.x = 0
         self.y = 0
 
