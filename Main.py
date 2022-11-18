@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
      # Si je fait par exemple print(tailleADJ["height"]), le output va être 500.
 
-
+    """methode qui assigne une position aleatoire dans l'aire de jeu"""
     def randomPosition():
         return random.randint(0, 500)
 
@@ -35,35 +35,37 @@ if __name__ == "__main__":
     titre.grid(column=1, row=0, padx=10, pady=10)
                     
     # créer l'aire de jeu et le mettre dans un grid en lui donnant du padding
-   
     aireDeJeu = AireDeJeu(mainContainer)
     vaisseau = Vaiseau(aireDeJeu)
 
+    # creation de la liste des ovni
     listeOvnis = []
-    ovni = Ovni(aireDeJeu, randomPosition(),-3)
+    ovni = Ovni(aireDeJeu, randomPosition(),-3) # test ovni
 
     
 
-    # créer un container pour afficher les statistiques en meme temps du jeu.
+    # créer un container pour afficher les statistiques en meme temps du jeu
     statsContainer = tk.Canvas(mainContainer, height=20, width=450,background= couleurTheme, highlightthickness=0)
     statsContainer.grid(column=1, row=3, padx=10, pady=5) # pour centrer et donner un padding
 
+    # créer un container pour afficher le score
     score = tk.Label(statsContainer, text="   Score:  0  ", fg='#FFFD85',background= couleurTheme)
     score.grid(column=1, row=1, padx=10) # pour centrer et donner un padding
 
+    # créer un container pour afficher la barre de vie
     lives = tk.Label(statsContainer, text="   Vies:  0  ", fg='#FFFD85',background= couleurTheme)
     lives.grid(column=2, row=1, padx=10) # pour centrer et donner un padding
 
+    # créer un container pour afficher les abilités
     ability = tk.Label(statsContainer, text="   Abilités:  None  ", fg='#FFFD85',background= couleurTheme)
     ability.grid(column=3, row=1, padx=10) # pour centrer et donner un padding
 
     # créer un container des buttonset le mettre dans un grid en lui donnant du padding
     buttonsContainer = tk.Canvas(mainContainer, background= couleurTheme, highlightthickness=0)
     buttonsContainer.grid(column=1, row=4, padx=10, pady=20) # pour centrer et donner un padding
-
     couleurButtons = "#E22866"
 
-    # # définir l'objet controleur
+    # définir l'objet controleur
     jeu = ControleurJeu(aireDeJeu.canva)
 
     # créer un button qui commence une nouvelle session et le mettre dans un grid en lui donnant du padding
@@ -78,34 +80,30 @@ if __name__ == "__main__":
     buttonQuitter = tk.Button(buttonsContainer, text="         Button3         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
     buttonQuitter.grid(column=3, row=1, padx=15)
 
+    # Creation des listes qui serviront à contenir les différents éléments du jeu
     listMissile = []
     listAsteroide = []
     listLaser = []
 
-
-    # instanceV = vaisseau.instanceVaisseau
+    # FIXME variable qui facilite la manipulation du vaisseau?
     imageV = vaisseau.imageVaisseau
    
+    """Methode qui permet le mouvement du vaisseau lorsque la souris se deplace"""
     def moveVaisseau(e):
 
-        global imageV
         # On ajoute cette ligne pour ne pas dupliquer des vaisseaux en utilisant toujours le même vaisseau
+        global imageV
 
         #Récupérer l'image de Vaisseau et reduire sa taille avec la méthode subsample
-
-
         # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
         imageV = tk.PhotoImage(file='Images/Vaisseau.png').subsample(12,12)
+        
+        # FIXME non utilise...
+        instanceV = aireDeJeu.canva.create_image(e.x,e.y, image=imageV)
 
-        instanceV = aireDeJeu.canva.create_image(e.x,e.y, image=imageV)#x=0, y=0
         vaisseau.setPositions(e.x,e.y)
 
-        print(vaisseau.x)
-        print(vaisseau.y)
-        # vaisseau.x = e.x
-        # vaisseau.y = e.y
-        
-
+    """Methode qui permet le mouvement des missiles"""
     def moveMissile():
         for missile in listMissile:
             aireDeJeu.canva.move(missile.instanceMissile, 0, -10)
@@ -119,13 +117,14 @@ if __name__ == "__main__":
         wait = Timer(0.03,moveMissile)
         wait.start()
 
-        
-
+    """Methode qui creer un missile et l'ajoute a la listMissile"""
     def shootMissile(event):
         listMissile.append(Missile(aireDeJeu, event.x, event.y))
 
     x = 0 
     imageA = vaisseau.imageVaisseau 
+
+    """Methode qui creer un asteroide et l'ajoute a la listAsteroide"""
     def createAsteroide():
         
         if random.randint(1,2) == 0:
@@ -142,7 +141,7 @@ if __name__ == "__main__":
         waitA = Timer(3, createAsteroide)
         waitA.start()
 
-
+    """Methode qui permet le mouvement des asteroides"""
     def moveAsteroide():
         
         for aste in listAsteroide:
@@ -165,17 +164,15 @@ if __name__ == "__main__":
         newWait = Timer(0.03, moveAsteroide)
         newWait.start()
         
-        
-        
-
-
+    """Methode qui creer les lasers et les ajoute a la listLaser"""
     def shootLaser(event):
         listLaser.append(Laser(aireDeJeu, (event.x + imageV.width()/4 + 2), 0, (event.x + imageV.width()/4), event.y))
         listLaser.append(Laser(aireDeJeu, (event.x - imageV.width()/4 + 2), 0, (event.x - imageV.width()/4), event.y))
         
-        wait = Timer(1, deleteLaser)
+        wait = Timer(1, deleteLaser)    # temps d'affichage des lasers 
         wait.start()
    
+    """Methode qui supprime les lasers"""
     def deleteLaser():
         aireDeJeu.canva.delete(listLaser[1].rectangleLaser)
         del listLaser[1]
@@ -183,12 +180,13 @@ if __name__ == "__main__":
         del listLaser[0]
         print('laser deleted')
 
-    # # Quand on clique sur le vaisseau et bouge le souris
+    # Le vaisseau se deplace en suivant la position de la souris
     aireDeJeu.canva.bind('<Motion>', moveVaisseau)
 
-    # #quand on click sur le vaisseau quelque chose se passe
+    # Un missile est tiré lorsqu'on fait un click gauche de la souris
     aireDeJeu.canva.bind('<Button-1>', shootMissile)
 
+    # Deux lasers sont tirés lorsqu'on fait un double-click gauche de la souris
     aireDeJeu.canva.bind('<Double-Button-1>', shootLaser)
 
     wait = Timer(0.03,moveMissile)
