@@ -1,6 +1,10 @@
 import tkinter as tk
 
 class AireDeJeu:
+    """
+    Class AireDeJeu initialise l'aire jouable dans l'application.
+    Prend le container comme parametre.
+    """
     def __init__(self, container):
         self.height = 500
         self.width = 450 
@@ -12,6 +16,10 @@ class AireDeJeu:
         self.canva.config(cursor="none")
 
 class Vaiseau:
+    """
+    Class Vaiseau permet l'initialisation de l'objet vaisseau, controlable par l'utilisateur
+    Parameters: Container, pour pouvoir placer le vaisseau dans l'air de jeu.
+    """
     def __init__(self, container):
         self.imageVaisseau = tk.PhotoImage(file='Images/Vaisseau.png').subsample(6,6)
         self.x = 0
@@ -23,6 +31,9 @@ class Vaiseau:
 
 
 class Missile:
+    """
+    Class Missile permet d'initialiser un objet missile, prend les coordonnes ainsi que le container tkinter comme paramatre.
+    """
     def __init__(self,container, x, y):
         self.x = x
         self.y = y
@@ -30,6 +41,10 @@ class Missile:
         self.instanceMissile = container.canva.create_image(self.x, self.y, image=self.imageMissile)
 
 class Laser:
+    """
+    Cette classe permet de creer un laser, qui sera tire par l'utilisateur
+    Parameters: Le container tkinter (AirDeJeu) et les coordonnes du laser
+    """
     def __init__(self,container, xCoinDroitHaut, yCoinDroitHaut, xCoinDroitBas, yCoinDroitBas, ):
         # self.x = x
         # self.y = y
@@ -41,15 +56,19 @@ class Ovni:
     def __init__(self,container, x, y):
         self.x = x
         self.y = y
-        self.imageOvni = tk.PhotoImage(file='Images/ovni.png').subsample(4,4)
+        self.imageOvni = tk.PhotoImage(file='Images/ovni.png').subsample(4,4) #Creation de l'image Ovni
         self.instanceOvni = container.canva.create_image(self.x,self.y,anchor=tk.NW,image=self.imageOvni)
         
 class Asteroide:
+    """
+    Cette classe permet l'initialisation d'un asteroide dans l'air de jeu,
+    Parameters: Les cordonnes (X, Y) ainsi que la direction de l'asteroide.
+    """
     def __init__(self,container, x, y, direction):
         self.x = x
         self.y = y
         self.direction = direction
-        self.imageAsteroide = tk.PhotoImage(file='Images/asteroide.gif').subsample(4,4)
-        self.instanceAsteroide = container.canva.create_image(self.x, self.y, anchor=tk.NW,image=self.imageAsteroide)
+        self.imageAsteroide = tk.PhotoImage(file='Images/asteroide.gif').subsample(4,4) #Creation de l'image Asteroide
+        self.instanceAsteroide = container.canva.create_image(self.x, self.y, anchor=tk.NW,image=self.imageAsteroide) #Placer l'image dans le container
         
         

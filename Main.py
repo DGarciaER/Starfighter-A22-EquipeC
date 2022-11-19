@@ -144,7 +144,7 @@ if __name__ == "__main__":
     """Methode qui permet le mouvement des asteroides"""
     def moveAsteroide():
         
-        for aste in listAsteroide:
+        for aste in listAsteroide: # forEach qui passe dans toute la list listAsteroide
             aireDeJeu.canva.move(aste.instanceAsteroide,5 , 5)
             aste.y += 5
             if aste.direction == "bas-droit":
