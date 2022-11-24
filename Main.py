@@ -1,5 +1,5 @@
 import tkinter as tk
-from ControleurJeu import ControleurJeu
+from ControleurJeu import ControleurJeu, Collision
 from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile, Asteroide, Laser
 from VueJeu import VueJeu
 from tkinter import *
@@ -38,9 +38,14 @@ if __name__ == "__main__":
     aireDeJeu = AireDeJeu(mainContainer)
     vaisseau = Vaiseau(aireDeJeu)
 
+
     # creation de la liste des ovni
     listeOvnis = []
-    ovni = Ovni(aireDeJeu, randomPosition(),-3) # test ovni
+    # ovni = Ovni(aireDeJeu, randomPosition(),-3) # test ovni
+    
+    listeOvnis.append(Ovni(aireDeJeu, 200,200))
+    
+
 
     
 
@@ -84,6 +89,8 @@ if __name__ == "__main__":
     listMissile = []
     listAsteroide = []
     listLaser = []
+    
+    collision = Collision()
 
     # FIXME variable qui facilite la manipulation du vaisseau?
     imageV = vaisseau.imageVaisseau
@@ -102,6 +109,10 @@ if __name__ == "__main__":
         instanceV = aireDeJeu.canva.create_image(e.x,e.y, image=imageV)
 
         vaisseau.setPositions(e.x,e.y)
+        
+
+        collision.vaseau_ennemie(e,vaisseau,listeOvnis)
+        
 
     """Methode qui permet le mouvement des missiles"""
     def moveMissile():
@@ -187,7 +198,7 @@ if __name__ == "__main__":
     aireDeJeu.canva.bind('<Button-1>', shootMissile)
 
     # Deux lasers sont tirés lorsqu'on fait un double-click gauche de la souris
-    aireDeJeu.canva.bind('<Double-Button-1>', shootLaser)
+    aireDeJeu.canva.bind('<Button-3>', shootLaser)
 
     wait = Timer(0.03,moveMissile)
     wait.start()
