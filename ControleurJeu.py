@@ -69,7 +69,7 @@ class Mouvement:
     #     instanceAstORoid  = aireDe
 
 class Collision:
-    def vaseau_ennemie(self, e, vaisseau, listeOvnis):
+    def vaseau_ennemie(self, vaisseau, listeOvnis):
          
         equivalance = 31
         
@@ -94,10 +94,10 @@ class Collision:
             if VT <= OB and VT >= OT or VY <= OB and VY >= OT or VB >= OT and VB <= OB:
                 if VR >= OL and VR <= OR or VL <= OR and VL >= OL or VX <= OR and VX >= OL:
                     print(True)
-                else:
-                    print(False)
-            else:
-                print(False)
+            #     else:
+            #         print(False)
+            # else:
+            #     print(False)
                 
             # print(OL)
             # print(ovni.imageOvni.width())

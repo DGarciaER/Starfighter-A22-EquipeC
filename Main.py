@@ -44,6 +44,7 @@ if __name__ == "__main__":
     # ovni = Ovni(aireDeJeu, randomPosition(),-3) # test ovni
     
     listeOvnis.append(Ovni(aireDeJeu, 200,200))
+    listeOvnis.append(Ovni(aireDeJeu, 100,100))
     
 
 
@@ -111,7 +112,7 @@ if __name__ == "__main__":
         vaisseau.setPositions(e.x,e.y)
         
 
-        collision.vaseau_ennemie(e,vaisseau,listeOvnis)
+        collision.vaseau_ennemie(vaisseau,listeOvnis)
         
 
     """Methode qui permet le mouvement des missiles"""
@@ -138,7 +139,7 @@ if __name__ == "__main__":
     """Methode qui creer un asteroide et l'ajoute a la listAsteroide"""
     def createAsteroide():
         
-        if random.randint(1,2) == 0:
+        if random.randint(0,1) == 0:
             
             x = random.randint(25,200)
             print(x)
@@ -149,26 +150,30 @@ if __name__ == "__main__":
             listAsteroide.append(Asteroide(aireDeJeu,x,-40,"bas-gauche"))
 
 
-        waitA = Timer(3, createAsteroide)
+        waitA = Timer(1, createAsteroide)
         waitA.start()
 
     """Methode qui permet le mouvement des asteroides"""
     def moveAsteroide():
         
         for aste in listAsteroide: # forEach qui passe dans toute la list listAsteroide
-            aireDeJeu.canva.move(aste.instanceAsteroide,5 , 5)
-            aste.y += 5
+            # print(aste.direction)
+
             if aste.direction == "bas-droit":
+                aireDeJeu.canva.move(aste.instanceAsteroide,5 ,5)
+                aste.y += 5
                 aste.x += 5
+
             elif aste.direction == "bas-gauche":
+                aireDeJeu.canva.move(aste.instanceAsteroide,-5 ,5)
+                aste.y += 5
                 aste.x -= 5
+
 
             if aste.y >= 500:
                 aireDeJeu.canva.delete(aste.instanceAsteroide)
                 listAsteroide.remove(aste)
 
-            
-                
                 print('deleted')
             
 
