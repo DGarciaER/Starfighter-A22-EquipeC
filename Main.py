@@ -123,8 +123,8 @@ if __name__ == "__main__":
         listMissile.append(Missile(aireDeJeu, event.x, event.y))
 
     def shootLaser(event):
-        listLaser.append(Laser(aireDeJeu, (event.x + imageV.width()/4 + 2), 0, (event.x + imageV.width()/4), event.y))
-        listLaser.append(Laser(aireDeJeu, (event.x - imageV.width()/4 + 2), 0, (event.x - imageV.width()/4), event.y))
+        listLaser.append(Laser(aireDeJeu, (event.x - imageV.width()/4 - 4), 0, (event.x - imageV.width()/4 - 2), event.y))
+        listLaser.append(Laser(aireDeJeu, (event.x + imageV.width()/4 + 3), 0, (event.x + imageV.width()/4 + 5), event.y))
         
         wait = Timer(1, deleteLaser)
         wait.start()
