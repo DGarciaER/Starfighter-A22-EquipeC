@@ -124,20 +124,22 @@ if __name__ == "__main__":
     laserCooldown = False #TODO deplacer au bon endroit
 
     def shootLaser(event):
-        global laserCooldown
+        # global laserCooldown
         if laserCooldown == False:
             listLaser.append(Laser(aireDeJeu, (event.x - imageV.width()/4 - 4), 0, (event.x - imageV.width()/4 - 2), event.y))
             listLaser.append(Laser(aireDeJeu, (event.x + imageV.width()/4 + 3), 0, (event.x + imageV.width()/4 + 5), event.y))
             
-            fire = Timer(1, deleteLaser)
-            fire.start()
-            print(laserCooldown)
-            # aireDeJeu.after(5000, resetCooldown)
-            # wait.start()
+            # fire = Timer(1, deleteLaser)
+            # fire.start()\
+            aireDeJeu.canva.after(1000, deleteLaser)
+            # print(laserCooldown)
+            # waitLaser = Timer(5, resetCooldown)
+            # waitLaser.start()
+            aireDeJeu.canva.after(10000, resetCooldown)
    
     def resetCooldown():
-        # global laserCooldown
         laserCooldown = False
+        print(laserCooldown)
 
     def deleteLaser():
         # global laserCooldown
@@ -146,7 +148,7 @@ if __name__ == "__main__":
         aireDeJeu.canva.delete(listLaser[0].rectangleLaser)   
         del listLaser[0]
         laserCooldown = True
-        print('laser deleted' + 'and laser cooldwon is ')
+        print('laser deleted ' + 'and laser cooldwon is ')
         print(laserCooldown)
 
     # # Quand on clique sur le vaisseau et bouge le souris
@@ -160,6 +162,8 @@ if __name__ == "__main__":
     wait = Timer(0.03,moveMissile)
     wait.start()
     
+    waitLaser = Timer(5, resetCooldown)
+    waitLaser.start()
     
     # FIN DE PARTIE
 
