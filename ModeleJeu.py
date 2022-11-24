@@ -68,7 +68,12 @@ class Asteroide:
         self.x = x
         self.y = y
         self.direction = direction
-        self.imageAsteroide = tk.PhotoImage(file='Images/asteroide.gif').subsample(4,4) #Creation de l'image Asteroide
+        if self.direction == "bas-droit":
+            self.imageAsteroide = tk.PhotoImage(file='Images/asteroide.gif').subsample(4,4) #Creation de l'image Asteroide
+        else:
+            self.imageAsteroide = tk.PhotoImage(file='Images/asteroideFlipped.png').subsample(4,4) #Creation de l'image Asteroide
+
+        
         self.instanceAsteroide = container.canva.create_image(self.x, self.y, anchor=tk.NW,image=self.imageAsteroide) #Placer l'image dans le container
         
         
