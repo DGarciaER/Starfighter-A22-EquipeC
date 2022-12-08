@@ -38,15 +38,11 @@ if __name__ == "__main__":
     aireDeJeu = AireDeJeu(mainContainer)
     vaisseau = Vaiseau(aireDeJeu)
 
+    #--------------------------------------------------------------------------------------
 
-    # creation de la liste des ovni
-    listeOvnis = []
-    # ovni = Ovni(aireDeJeu, randomPosition(),-3) # test ovni
     
-    listeOvnis.append(Ovni(aireDeJeu, 200,200))
-    listeOvnis.append(Ovni(aireDeJeu, 100,100))
     
-
+    #----------------------------------------------------------------------------------------
 
     
 
@@ -90,7 +86,7 @@ if __name__ == "__main__":
     listMissile = []
     listAsteroide = []
     listLaser = []
-    
+    listeOvnis = []
     collision = Collision()
 
     # FIXME variable qui facilite la manipulation du vaisseau?
@@ -124,7 +120,7 @@ if __name__ == "__main__":
             if missile.y <= 0:
                 aireDeJeu.canva.delete(missile.instanceMissile)
                 listMissile.remove(missile)
-                print('deleted')
+                # print('deleted')
 
         wait = Timer(0.03,moveMissile)
         wait.start()
@@ -140,17 +136,18 @@ if __name__ == "__main__":
     def createAsteroide():
         
         if random.randint(0,1) == 0:
-            
+            # on fait partir l'asteroide a gauche
             x = random.randint(25,200)
-            print(x)
+            # print(x)
             listAsteroide.append(Asteroide(aireDeJeu,x,-40,"bas-droit"))
 
         else:
+            #on fait partir l'asteroide à droite
             x = random.randint(250,425)
             listAsteroide.append(Asteroide(aireDeJeu,x,-40,"bas-gauche"))
 
 
-        waitA = Timer(1, createAsteroide)
+        waitA = Timer(8, createAsteroide)
         waitA.start()
 
     """Methode qui permet le mouvement des asteroides"""
@@ -174,11 +171,45 @@ if __name__ == "__main__":
                 aireDeJeu.canva.delete(aste.instanceAsteroide)
                 listAsteroide.remove(aste)
 
-                print('deleted')
+                # print('deleted')
             
 
         newWait = Timer(0.03, moveAsteroide)
         newWait.start()
+
+    
+
+    '''methode pour creer des ovnis avec une postion x aleatoire'''
+    def createOvnis():
+        if random.randint(0,1) == 0:
+            # on fait partir l'ovnis a gauche
+            x = random.randint(25,200)
+            listeOvnis.append(Ovni(aireDeJeu,x,-40))
+
+        else:
+            #on fait partir l'ovnis à droite
+            x = random.randint(250,425)
+            listeOvnis.append(Ovni(aireDeJeu,x,-40))
+
+
+        waitB = Timer(3, createOvnis)#cree un ovnis a chaque 3s
+        waitB.start()
+
+    """Methode qui permet le mouvement des ovnis"""
+    def moveOvnis():
+        
+        for ovn in listeOvnis: # forEach qui passe dans toute la list listAsteroide
+            # print(aste.direction)
+                aireDeJeu.canva.move(ovn.instanceOvni,0 ,2)#deplacement de l'ovnis en x = 0, y = 2
+                ovn.y += 2
+                if ovn.y >= 500:
+                    aireDeJeu.canva.delete(ovn.instanceOvni)
+                    listeOvnis.remove(ovn)
+        
+        newWait = Timer(0.03, moveOvnis)
+        newWait.start()
+
+   
         
     """Methode qui creer les lasers et les ajoute a la listLaser"""
     def shootLaser(event):
@@ -194,7 +225,7 @@ if __name__ == "__main__":
         del listLaser[1]
         aireDeJeu.canva.delete(listLaser[0].rectangleLaser)   
         del listLaser[0]
-        print('laser deleted')
+        # print('laser deleted')
 
     # Le vaisseau se deplace en suivant la position de la souris
     aireDeJeu.canva.bind('<Motion>', moveVaisseau)
@@ -211,6 +242,12 @@ if __name__ == "__main__":
     waitA.start()
     waitA = Timer(0.03, moveAsteroide)
     waitA.start()
+
+    #creation ovnis
+    waitB = Timer(3, createOvnis)
+    waitB.start()
+    waitB = Timer(0.03, moveOvnis)
+    waitB.start()
     
     # FIN DE PARTIE
 
