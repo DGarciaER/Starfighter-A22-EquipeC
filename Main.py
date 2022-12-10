@@ -1,6 +1,6 @@
 import tkinter as tk
 from ControleurJeu import ControleurJeu, Collision
-from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile, Asteroide, Laser
+from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile, Asteroide, Laser, Niveau
 from VueJeu import VueJeu
 from tkinter import *
 import threading
@@ -12,14 +12,14 @@ if __name__ == "__main__":
 
     # créer une fenetre tk avec un titre, un background et des dimensions
     couleurTheme = "#41157A"
-
+    
      # Si je fait par exemple print(tailleADJ["height"]), le output va être 500.
 
     """methode qui assigne une position aleatoire dans l'aire de jeu"""
     def randomPosition():
         return random.randint(0, 500)
 
-
+    #creation fenetre root
     root = tk.Tk()
     root.title("Star Fighter")
     root.config(background= couleurTheme)
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     #----------------------------------------------------------------------------------------
 
     
-
+    
     # créer un container pour afficher les statistiques en meme temps du jeu
     statsContainer = tk.Canvas(mainContainer, height=20, width=450,background= couleurTheme, highlightthickness=0)
     statsContainer.grid(column=1, row=3, padx=10, pady=5) # pour centrer et donner un padding
@@ -67,20 +67,105 @@ if __name__ == "__main__":
     buttonsContainer.grid(column=1, row=4, padx=10, pady=20) # pour centrer et donner un padding
     couleurButtons = "#E22866"
 
+    
+
+    def niveau_facile():
+     global timerMoveMissile 
+     global timerMoveAsteroide 
+     global timerCreateAsteroide 
+     global timerCreateOvnis 
+     global timerMoveOvnis 
+
+     timerMoveMissile = 0
+     timerMoveAsteroide = 0
+     timerCreateAsteroide = 0
+     timerCreateOvnis = 0
+     timerMoveOvnis = 0
+        
+     if level.niveau == "facile":
+            timerMoveMissile = 0.03
+            timerMoveAsteroide = 0.03
+            timerCreateAsteroide = 5
+            timerCreateOvnis = 5
+            timerMoveOvnis = 0.03
+        # elif level.niveau == "moyen":
+        # elif level.niveau == "difficile":
+     elif level.niveau == "moyen":
+            timerMoveMissile = 0.03
+            timerMoveAsteroide = 0.03
+            timerCreateAsteroide = 3
+            timerCreateOvnis = 3
+            timerMoveOvnis = 0.01
+
+
+            # Le vaisseau se deplace en suivant la position de la souris
+     aireDeJeu.canva.bind('<Motion>', moveVaisseau)
+
+            # Un missile est tiré lorsqu'on fait un click gauche de la souris
+     aireDeJeu.canva.bind('<Button-1>', shootMissile)
+
+        # Deux lasers sont tirés lorsqu'on fait un double-click gauche de la souris
+     aireDeJeu.canva.bind('<Button-3>', shootLaser)
+        
+     wait = Timer(timerMoveMissile,moveMissile)
+     wait.start()
+     waitA = Timer(timerCreateAsteroide, createAsteroide)
+     waitA.start()
+     waitA = Timer(timerMoveAsteroide, moveAsteroide)
+     waitA.start()
+        
+        #creation ovnis
+     waitB = Timer(timerCreateOvnis, createOvnis)
+     waitB.start()
+     waitB = Timer(timerMoveOvnis, moveOvnis)
+     waitB.start()
+       
+            
+        
+
+#------------------------------------------------------------------------------------------------------------------------------
+   
+    level =  Niveau()
+    def afficherChoixLevel():
+        #creation de la fenetre
+        fenetreLevel = tk.Tk()
+        fenetreLevel.title("Choix du niveau")
+        fenetreLevel.geometry("400x400")
+        buttonsContainerAlignement = tk.Canvas(fenetreLevel, highlightthickness=0)
+        buttonsContainerAlignement.pack() # pour centrer et donner un padding
+        buttonEasyLevel = Button(buttonsContainerAlignement, text="Facile", command=level.level_facile)
+        buttonMediumLevel = Button(buttonsContainerAlignement, text="Moyen", command=level.level_moyen)
+        buttonCommencer = Button(buttonsContainerAlignement, text="Commencer", command=niveau_facile)
+        buttonCommencer.grid(column=4, row=1,padx=15)
+        buttonEasyLevel.grid(column=2, row=1,padx=15)
+        buttonMediumLevel.grid(column=3, row=1, padx=15)
+       
+   
+        
+        
+
+
+
+    #---------------------------------------------------------------------------------------------------------------------------------------------------------------
     # définir l'objet controleur
     jeu = ControleurJeu(aireDeJeu.canva)
 
     # créer un button qui commence une nouvelle session et le mettre dans un grid en lui donnant du padding
-    buttonNouvSession = tk.Button(buttonsContainer, text="         Button1         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
+    buttonNouvSession = tk.Button(buttonsContainer, text="         Nouvelle session         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'),command=afficherChoixLevel)
     buttonNouvSession.grid(column=1, row=1, padx=15)
 
     # créer un button qui affiche le menu score un nouveau jeu et le mettre dans un grid en lui donnant du padding
-    buttonMenuScores = tk.Button(buttonsContainer, text="         Button2         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
+    buttonMenuScores = tk.Button(buttonsContainer, text="         Scores         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
     buttonMenuScores.grid(column=2, row=1, padx=15)
 
     # créer un button quitte du programme et le mettre dans un grid en lui donnant du padding
-    buttonQuitter = tk.Button(buttonsContainer, text="         Button3         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
+    buttonQuitter = tk.Button(buttonsContainer, text="         Quitter         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
     buttonQuitter.grid(column=3, row=1, padx=15)
+
+    
+
+
+
 
     # Creation des listes qui serviront à contenir les différents éléments du jeu
     listMissile = []
@@ -191,8 +276,9 @@ if __name__ == "__main__":
             x = random.randint(250,425)
             listeOvnis.append(Ovni(aireDeJeu,x,-40))
 
+        print(timerMoveOvnis)
 
-        waitB = Timer(3, createOvnis)#cree un ovnis a chaque 3s
+        waitB = Timer(timerCreateOvnis, createOvnis)#cree un ovnis a chaque 3s
         waitB.start()
 
     """Methode qui permet le mouvement des ovnis"""
@@ -206,7 +292,7 @@ if __name__ == "__main__":
                     aireDeJeu.canva.delete(ovn.instanceOvni)
                     listeOvnis.remove(ovn)
         
-        newWait = Timer(0.03, moveOvnis)
+        newWait = Timer(timerMoveOvnis, moveOvnis)
         newWait.start()
 
    
@@ -227,29 +313,17 @@ if __name__ == "__main__":
         del listLaser[0]
         # print('laser deleted')
 
-    # Le vaisseau se deplace en suivant la position de la souris
-    aireDeJeu.canva.bind('<Motion>', moveVaisseau)
 
-    # Un missile est tiré lorsqu'on fait un click gauche de la souris
-    aireDeJeu.canva.bind('<Button-1>', shootMissile)
 
-    # Deux lasers sont tirés lorsqu'on fait un double-click gauche de la souris
-    aireDeJeu.canva.bind('<Button-3>', shootLaser)
+   #Lancement du jeu a partir d'ici--------------------------------------------------
 
-    wait = Timer(0.03,moveMissile)
-    wait.start()
-    waitA = Timer(3, createAsteroide)
-    waitA.start()
-    waitA = Timer(0.03, moveAsteroide)
-    waitA.start()
+    afficherChoixLevel()
+   
+   
+    # waitNiveau = Timer(1,niveau_facile)
+    # waitNiveau.start()
+        
+ # FIN DE PARTIE
 
-    #creation ovnis
-    waitB = Timer(3, createOvnis)
-    waitB.start()
-    waitB = Timer(0.03, moveOvnis)
-    waitB.start()
-    
-    # FIN DE PARTIE
-
-    # boocler la fenetre tk
-    root.mainloop()
+# boocler la fenetre tk
+root.mainloop()
