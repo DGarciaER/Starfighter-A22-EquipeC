@@ -212,7 +212,7 @@ if __name__ == "__main__":
     """Methode qui permet le mouvement des missiles"""
     def moveMissile():
         for missile in listMissile:
-            aireDeJeu.canva.move(missile.instanceMissile, 0, -10)
+            aireDeJeu.canva.movex(missile.instanceMissile, 0, -10)
             missile.y -=10
 
             if missile.y <= 0:
