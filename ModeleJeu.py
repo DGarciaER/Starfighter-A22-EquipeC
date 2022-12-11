@@ -15,6 +15,12 @@ class AireDeJeu:
         self.canva.grid(column=1, row=1, padx=20) # pour centrer et donner un padding
         # self.canva.config(cursor="none")
 
+class Player:
+    def __init__(self):
+        self.score = 0
+        self.hp = 10
+
+
 class Vaiseau:
     """
     Class Vaiseau permet l'initialisation de l'objet vaisseau, controlable par l'utilisateur

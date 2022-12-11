@@ -70,18 +70,25 @@ class Mouvement:
 
 
 
-class Score:
-    def __init__(self):
-        self.score = 0
+class PlayerControl:    # FIXME erreur de parametre quand on appelle perte_hp
+    def __init__(self, player):
+        self.player = player
 
     def augmentation_score(self):
-        self.score += 1
+        self.player.score += 1
+    
+    def augmentation_hp(self):
+        if self.player.hp < 10:
+            self.player.hp += 1
 
+    def perte_hp(self):
+        if self.player.hp > 0:
+            self.player.hp -= 1
 
 class Collision:
     
 
-    def vaseau_ennemie(self, vaisseau, listeOvnis):
+    def vaseau_ennemie(self, vaisseau, listeOvnis, playerControl):
          
         equivalance = 31
          
@@ -104,8 +111,7 @@ class Collision:
             # la logique des collisions avec RB
             if VT <= OB and VT >= OT or VY <= OB and VY >= OT or VB >= OT and VB <= OB:
                 if VR >= OL and VR <= OR or VL <= OR and VL >= OL or VX <= OR and VX >= OL:
-                    print(True)
-                    #vie -= 1
+                    PlayerControl.perte_hp()
                     
                 
             # print(OL)
@@ -115,7 +121,7 @@ class Collision:
             # print("Position of souris: " + str(e.x))
             # print("Position of vaisseau-top: " + str(VL))
     
-    def missiles_ovnis(self, listeMissiles, listeOvnis, score):
+    def missiles_ovnis(self, listeMissiles, listeOvnis, player):
         
         equivalance = 0
         
@@ -138,8 +144,8 @@ class Collision:
                 # la logique des collisions avec RB
                 if MT <= OB and MT >= OT or MY <= OB and MY >= OT or MB >= OT and MB <= OB:
                     if MR >= OL and MR <= OR or ML <= OR and ML >= OL or MX <= OR and MX >= OL:
-                        score.score += 1
-                        print(score.score)
+                        player.score += 1
+                        print(player.score)
 
                         
     def vaisseau_asteroids(self, vaisseau, listeAsteroids):
