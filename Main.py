@@ -189,6 +189,7 @@ if __name__ == "__main__":
     def collisionFunction():
         collision.vaseau_ennemie(vaisseau,listeOvnis)
         collision.missiles_ovnis(listeMissiles,listeOvnis, leScore)
+        collision.vaisseau_asteroids(vaisseau,listAsteroide)
         waitCollision = Timer(0.2,collisionFunction)
         waitCollision.start()
 
@@ -319,19 +320,24 @@ if __name__ == "__main__":
         
     """Methode qui creer les lasers et les ajoute a la listLaser"""
     def shootLaser(event):
-        listLaser.append(Laser(aireDeJeu, (event.x + imageV.width()/4 + 2), 0, (event.x + imageV.width()/4), event.y))
-        listLaser.append(Laser(aireDeJeu, (event.x - imageV.width()/4 + 2), 0, (event.x - imageV.width()/4), event.y))
-        
-        wait = Timer(1, deleteLaser)    # temps d'affichage des lasers 
-        wait.start()
+        if vaisseau.laserCooldown == False:
+            vaisseau.laserCooldown = True
+            listLaser.append(Laser(aireDeJeu, (event.x - imageV.width()/4 - 4), 0, (event.x - imageV.width()/4 - 2), event.y))
+            listLaser.append(Laser(aireDeJeu, (event.x + imageV.width()/4 + 3), 0, (event.x + imageV.width()/4 + 5), event.y))
+            aireDeJeu.canva.after(1000, deleteLaser)
+            aireDeJeu.canva.after(5000, resetCooldown)
    
+    def resetCooldown():
+        vaisseau.laserCooldown = False
+        print( "in resetCooldown")
+
     """Methode qui supprime les lasers"""
     def deleteLaser():
         aireDeJeu.canva.delete(listLaser[1].rectangleLaser)
         del listLaser[1]
         aireDeJeu.canva.delete(listLaser[0].rectangleLaser)   
         del listLaser[0]
-        # print('laser deleted')
+        print('laser deleted')
 
     def updateScore():
         scoreLabel.config(text="Score " + " : " + str(leScore.score))

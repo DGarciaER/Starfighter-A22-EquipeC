@@ -24,6 +24,7 @@ class Vaiseau:
         self.imageVaisseau = tk.PhotoImage(file='Images/Vaisseau.png').subsample(6,6)
         self.x = 0
         self.y = 0
+        self.laserCooldown = False
 
     def setPositions(self,x,y):
         self.x = x

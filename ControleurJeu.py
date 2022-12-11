@@ -142,7 +142,27 @@ class Collision:
                         print(score.score)
 
                         
-                        
+    def vaisseau_asteroids(self, vaisseau, listeAsteroids):
+        equivalance = 0
+
+        VY = vaisseau.y      #position Y milieu du carré rouge 
+        VX = vaisseau.x      #position X milieu du carré rouge 
+        VL = vaisseau.x - vaisseau.imageVaisseau.width()/2 + equivalance      #position gauche du carré rouge 
+        VR = vaisseau.x + vaisseau.imageVaisseau.width()/2 - equivalance      #position droite du carré rouge
+        VT = vaisseau.y - vaisseau.imageVaisseau.height()/2 + equivalance     #position haut du carré rouge
+        VB = vaisseau.y + vaisseau.imageVaisseau.height()/2 - equivalance     #position bas du carré rouge
+
+        for asteroid in listeAsteroids:
+
+            AL = asteroid.x                           #position gauche du pion
+            AR = asteroid.x + asteroid.imageAsteroide.width()  #position droite du pion
+            AT = asteroid.y                           #position haut du pion
+            AB = asteroid.y + asteroid.imageAsteroide.height() #position bas du pion
+
+            # la logique des collisions avec RB
+            if VT <= AB and VT >= AT or VY <= AB and VY >= AT or VB >= AT and VB <= AB:
+                if VR >= AL and VR <= AR or VL <= AR and VL >= AL or VX <= AR and VX >= AL:
+                    print("asteroid")           
                         
                         
                         
