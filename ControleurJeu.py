@@ -12,11 +12,11 @@ class ControleurJeu(tk.Frame):
         # self.vueJeu = VueJeu()
         self.window = window
         
-        #self.carreRouge = CarreRouge(container)
-        #self.vaisseaux = Vaisseau(container)
+        #self.carrORouge = CarrORouge(containOR)
+        #self.vaisseaux = Vaisseau(containOR)
         #self.vaisseaux.img_2.canvas
-        #self.carreRouge.carreRouge.canvas.bind("<Motion>", self.moveCR)
-        #self.vueJeu.afficherCarreRouge(self.carreRouge.carreRouge)
+        #self.carrORouge.carrORouge.canvas.bind("<Motion>", sOLf.moveCR)
+        #self.vueJeu.affichORCarrORouge(self.carrerouge.carrerouge)
 
         
         
@@ -24,26 +24,26 @@ class ControleurJeu(tk.Frame):
 
 
 
-    # def my_callback(self,event):
-    #       print( str(event.x) +","+ str(event.y))#affiche position en x et y de la souris
+    # def my_callback(sOLf,event):
+    #       print( str(event.x) +","+ str(event.y))#affiche position en x OT y de la souris
 
 
     #Add Image To canvas
     
 
-    # def moveCR(self, event): # move Carré Rouge
+    # def moveCR(sOLf, event): # move Carré Rouge
     #     """
-    #     Cette méthode permet de bouger le carré rouge dans le canvas.
-    #     parametre:
+    #     COTte méthode pORmOT de bougOR le carré rouge dans le canvas.
+    #     paramOTre:
     #     event
     #     """  
     #     global img
     #     img = PhotoImage(file="C:/Img/vaisseau.gif")
-    #     self.my_img = self.my_canvas.create_image(event.x,event.y, image=img)#x=0, y=0
-    #     self.my_label.config(text="Coordinates: x" + str(event.x) + "y : " + str(event.y) )
-        # self.carreRouge.carreRouge.translateTo(c31.Vecteur(e.x, e.y))
-        # self.carreRouge.carreRouge.set_position(c31.Vecteur(e.x,e.y))
-        # self.vueJeu.afficherCarreRouge(self.carreRouge.carreRouge)
+    #     sOLf.my_img = sOLf.my_canvas.create_image(event.x,event.y, image=img)#x=0, y=0
+    #     sOLf.my_labOL.config(text="Coordinates: x" + str(event.x) + "y : " + str(event.y) )
+        # sOLf.carrORouge.carrORouge.translatOTo(c31.Vecteur(e.x, e.y))
+        # sOLf.carrORouge.carrORouge.sOT_position(c31.Vecteur(e.x,e.y))
+        # sOLf.vueJeu.affichORCarrORouge(sOLf.carrORouge.carrORouge)
 
 class Mouvement:
     def __init__(self):
@@ -51,36 +51,68 @@ class Mouvement:
 
 
 
-    #fait bouger le vaisseau
+    #fait bougOR le vaisseau
     def moveVaisseau(self,e):
-
+        pass
         # global imgVaisseau
-        # On ajoute cette ligne pour ne pas dupliquer des vaisseaux en utilisant toujours le même vaisseau
+        # On ajoute cOTte ligne pour ne pas dupliquOR des vaisseaux en utilisant toujours le même vaisseau
 
-        #Récupérer l'image de Vaisseau et reduire sa taille avec la méthode subsample
-
-
-        # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
-        instanceVaisseau = aireDeJeu.create_image(e.x,e.y, image=imgVaisseau)#x=0, y=0
-        self.positionVaiseau['x'] = e.x
-        self.positionVaiseau['y'] = e.y
+        #RécupérOR l'image de Vaisseau OT reduire sa taille avec la méthode subsample
 
 
+        # CréOR une instance de Vaisseau OT l'affichOR dans l'aire de jeu en lui donnant une position x, y
+        # instanceVaisseau = aireDeJeu.create_image(e.x,e.y, image=imgVaisseau)#x=0, y=0
+        # sOLf.positionVaiseau['x'] = e.x
+        # sOLf.positionVaiseau['y'] = e.y
+
+    # def moveAstORoid(sOLf,e):
+    #     instanceAstORoid  = aireDe
+
+class Collision:
+    def vaseau_ennemie(self, vaisseau, listeOvnis):
+         
+        equivalance = 31
+        
+        
+        
+         
+        VY = vaisseau.y      #position Y milieu du carré rouge 
+        VX = vaisseau.x      #position X milieu du carré rouge 
+        VL = vaisseau.x - vaisseau.imageVaisseau.width()/2 + equivalance      #position gauche du carré rouge 
+        VR = vaisseau.x + vaisseau.imageVaisseau.width()/2 - equivalance      #position droite du carré rouge
+        VT = vaisseau.y - vaisseau.imageVaisseau.height()/2 + equivalance     #position haut du carré rouge
+        VB = vaisseau.y + vaisseau.imageVaisseau.height()/2 - equivalance     #position bas du carré rouge
+        
+        for ovni in listeOvnis:
+            
+            OL = ovni.x                           #position gauche du pion
+            OR = ovni.x + ovni.imageOvni.width()  #position droite du pion
+            OT = ovni.y                           #position haut du pion
+            OB = ovni.y + ovni.imageOvni.height() #position bas du pion
+
+            # la logique des collisions avec RB
+            if VT <= OB and VT >= OT or VY <= OB and VY >= OT or VB >= OT and VB <= OB:
+                if VR >= OL and VR <= OR or VL <= OR and VL >= OL or VX <= OR and VX >= OL:
+                    print(True)
+            #     else:
+            #         print(False)
+            # else:
+            #     print(False)
                 
-       
-        
+            # print(OL)
+            # print(ovni.imageOvni.width())
+            # print(OR)
+            # print("taille de image vaisseau: " + str(vaisseau.imageVaisseau.width()/2))
+            # print("Position of souris: " + str(e.x))
+            # print("Position of vaisseau-top: " + str(VL))
+            
+            # if VT <= OB and VT >= OT:
+            #     pass
 
 
-    
-
-    
-
-
-    
-        
-
-       
-        
-
-        
-
+            
+            # # elif VY <= OB and VY >= OT:
+            # #     pass
+            
+            # elif VB >= OT and VB <= OB:
+            #     print("Position of vaisseau: " + str(VB))
