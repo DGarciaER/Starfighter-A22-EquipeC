@@ -185,12 +185,13 @@ if __name__ == "__main__":
     listeOvnis = []
     collision = Collision()
 
-    def collision():
+    def collisionFunction():
         collision.vaseau_ennemie(vaisseau,listeOvnis)
         collision.missiles_ovnis(listeMissiles,listeOvnis)
-        collision()
+        waitCollision = Timer(0.3,collisionFunction)
+        waitCollision.start()
 
-    waitCollision = Timer(1,collision)
+    waitCollision = Timer(0.3,collisionFunction)
     waitCollision.start()
 
 

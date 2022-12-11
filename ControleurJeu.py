@@ -107,10 +107,10 @@ class Collision:
 
             MY = missile.y      #position Y milieu du carré rouge 
             MX = missile.x      #position X milieu du carré rouge 
-            ML = missile.x - missile.imageVaisseau.width()/2 + equivalance      #position gauche du carré rouge 
-            MR = missile.x + missile.imageVaisseau.width()/2 - equivalance      #position droite du carré rouge
-            MT = missile.y - missile.imageVaisseau.height()/2 + equivalance     #position haut du carré rouge
-            MB = missile.y + missile.imageVaisseau.height()/2 - equivalance     #position bas du carré rouge
+            ML = missile.x - missile.imageMissile.width()/2 + equivalance      #position gauche du carré rouge 
+            MR = missile.x + missile.imageMissile.width()/2 - equivalance      #position droite du carré rouge
+            MT = missile.y - missile.imageMissile.height()/2 + equivalance     #position haut du carré rouge
+            MB = missile.y + missile.imageMissile.height()/2 - equivalance     #position bas du carré rouge
 
             for ovni in listeOvnis:
             
