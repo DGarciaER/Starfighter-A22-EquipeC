@@ -317,13 +317,7 @@ if __name__ == "__main__":
             vaisseau.laserCooldown = True
             listLaser.append(Laser(aireDeJeu, (event.x - imageV.width()/4 - 4), 0, (event.x - imageV.width()/4 - 2), event.y))
             listLaser.append(Laser(aireDeJeu, (event.x + imageV.width()/4 + 3), 0, (event.x + imageV.width()/4 + 5), event.y))
-            
-            # fire = Timer(1, deleteLaser)    # temps d'affichage des lasers 
-            # fire.start()\
             aireDeJeu.canva.after(1000, deleteLaser)
-            # print(laserCooldown)
-            # waitLaser = Timer(5, resetCooldown)
-            # waitLaser.start()
             aireDeJeu.canva.after(5000, resetCooldown)
    
     def resetCooldown():
