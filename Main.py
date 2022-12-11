@@ -168,14 +168,21 @@ if __name__ == "__main__":
     
 
 
-
-
     # Creation des listes qui serviront à contenir les différents éléments du jeu
-    listMissile = []
+    listeMissiles = []
     listAsteroide = []
     listLaser = []
     listeOvnis = []
     collision = Collision()
+
+    def collision():
+        collision.vaseau_ennemie(vaisseau,listeOvnis)
+        collision.missiles_ovnis(listeMissiles,listeOvnis)
+        collision()
+
+    waitCollision = Timer(1,collision)
+    waitCollision.start()
+
 
     # FIXME variable qui facilite la manipulation du vaisseau?
     imageV = vaisseau.imageVaisseau
@@ -196,26 +203,23 @@ if __name__ == "__main__":
         vaisseau.setPositions(e.x,e.y)
         
 
-        collision.vaseau_ennemie(vaisseau,listeOvnis)
-        
-
     """Methode qui permet le mouvement des missiles"""
     def moveMissile():
-        for missile in listMissile:
+        for missile in listeMissiles:
             aireDeJeu.canva.move(missile.instanceMissile, 0, -10)
             missile.y -=10
 
             if missile.y <= 0:
                 aireDeJeu.canva.delete(missile.instanceMissile)
-                listMissile.remove(missile)
+                listeMissiles.remove(missile)
                 # print('deleted')
 
         wait = Timer(0.03,moveMissile)
         wait.start()
 
-    """Methode qui creer un missile et l'ajoute a la listMissile"""
+    """Methode qui creer un missile et l'ajoute a la listeMissiles"""
     def shootMissile(event):
-        listMissile.append(Missile(aireDeJeu, event.x, event.y))
+        listeMissiles.append(Missile(aireDeJeu, event.x, event.y))
 
     x = 0 
     imageA = vaisseau.imageVaisseau 

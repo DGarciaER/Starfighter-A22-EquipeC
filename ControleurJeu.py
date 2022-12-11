@@ -72,9 +72,6 @@ class Collision:
     def vaseau_ennemie(self, vaisseau, listeOvnis):
          
         equivalance = 31
-        
-        
-        
          
         VY = vaisseau.y      #position Y milieu du carré rouge 
         VX = vaisseau.x      #position X milieu du carré rouge 
@@ -94,10 +91,6 @@ class Collision:
             if VT <= OB and VT >= OT or VY <= OB and VY >= OT or VB >= OT and VB <= OB:
                 if VR >= OL and VR <= OR or VL <= OR and VL >= OL or VX <= OR and VX >= OL:
                     print(True)
-            #     else:
-            #         print(False)
-            # else:
-            #     print(False)
                 
             # print(OL)
             # print(ovni.imageOvni.width())
@@ -105,14 +98,28 @@ class Collision:
             # print("taille de image vaisseau: " + str(vaisseau.imageVaisseau.width()/2))
             # print("Position of souris: " + str(e.x))
             # print("Position of vaisseau-top: " + str(VL))
-            
-            # if VT <= OB and VT >= OT:
-            #     pass
+    
+    def missiles_ovnis(self, listeMissiles, listeOvnis):
 
+        equivalance = 0
 
+        for missile in listeMissiles:
+
+            MY = missile.y      #position Y milieu du carré rouge 
+            MX = missile.x      #position X milieu du carré rouge 
+            ML = missile.x - missile.imageVaisseau.width()/2 + equivalance      #position gauche du carré rouge 
+            MR = missile.x + missile.imageVaisseau.width()/2 - equivalance      #position droite du carré rouge
+            MT = missile.y - missile.imageVaisseau.height()/2 + equivalance     #position haut du carré rouge
+            MB = missile.y + missile.imageVaisseau.height()/2 - equivalance     #position bas du carré rouge
+
+            for ovni in listeOvnis:
             
-            # # elif VY <= OB and VY >= OT:
-            # #     pass
-            
-            # elif VB >= OT and VB <= OB:
-            #     print("Position of vaisseau: " + str(VB))
+                OL = ovni.x                           #position gauche du pion
+                OR = ovni.x + ovni.imageOvni.width()  #position droite du pion
+                OT = ovni.y                           #position haut du pion
+                OB = ovni.y + ovni.imageOvni.height() #position bas du pion
+
+                # la logique des collisions avec RB
+                if MT <= OB and MT >= OT or MY <= OB and MY >= OT or MB >= OT and MB <= OB:
+                    if MR >= OL and MR <= OR or ML <= OR and ML >= OL or MX <= OR and MX >= OL:
+                        print(True)
