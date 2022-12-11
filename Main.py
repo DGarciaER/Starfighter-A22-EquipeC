@@ -1,5 +1,5 @@
 import tkinter as tk
-from ControleurJeu import ControleurJeu, Collision
+from ControleurJeu import ControleurJeu, Collision,Score
 from ModeleJeu import AireDeJeu, Vaiseau, Ovni, Missile, Asteroide, Laser, Niveau
 from VueJeu import VueJeu
 from tkinter import *
@@ -43,16 +43,17 @@ if __name__ == "__main__":
     
     
     #----------------------------------------------------------------------------------------
-
     
+    
+    leScore = Score()
     
     # créer un container pour afficher les statistiques en meme temps du jeu
     statsContainer = tk.Canvas(mainContainer, height=20, width=450,background= couleurTheme, highlightthickness=0)
     statsContainer.grid(column=1, row=3, padx=10, pady=5) # pour centrer et donner un padding
 
     # créer un container pour afficher le score
-    score = tk.Label(statsContainer, text="   Score:  0  ", fg='#FFFD85',background= couleurTheme)
-    score.grid(column=1, row=1, padx=10) # pour centrer et donner un padding
+    scoreLabel = tk.Label(statsContainer, text="   Score:    " , fg='#FFFD85',background= couleurTheme)
+    scoreLabel.grid(column=1, row=1, padx=10) # pour centrer et donner un padding
 
     # créer un container pour afficher la barre de vie
     lives = tk.Label(statsContainer, text="   Vies:  0  ", fg='#FFFD85',background= couleurTheme)
@@ -187,11 +188,11 @@ if __name__ == "__main__":
 
     def collisionFunction():
         collision.vaseau_ennemie(vaisseau,listeOvnis)
-        collision.missiles_ovnis(listeMissiles,listeOvnis)
-        waitCollision = Timer(0.3,collisionFunction)
+        collision.missiles_ovnis(listeMissiles,listeOvnis, leScore)
+        waitCollision = Timer(0.2,collisionFunction)
         waitCollision.start()
 
-    waitCollision = Timer(0.3,collisionFunction)
+    waitCollision = Timer(0.2,collisionFunction)
     waitCollision.start()
 
 
@@ -332,12 +333,18 @@ if __name__ == "__main__":
         del listLaser[0]
         # print('laser deleted')
 
+    def updateScore():
+        scoreLabel.config(text="Score " + " : " + str(leScore.score))
+        waitScore = Timer(0.1, updateScore)
+        waitScore.start()
+    updateScore()
 
 
    #Lancement du jeu a partir d'ici--------------------------------------------------
 
     afficherChoixLevel()
-   
+    
+    
    
     # waitNiveau = Timer(1,niveau_facile)
     # waitNiveau.start()

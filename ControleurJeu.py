@@ -68,7 +68,19 @@ class Mouvement:
     # def moveAstORoid(sOLf,e):
     #     instanceAstORoid  = aireDe
 
+
+
+class Score:
+    def __init__(self):
+        self.score = 0
+
+    def augmentation_score(self):
+        self.score += 1
+
+
 class Collision:
+    
+
     def vaseau_ennemie(self, vaisseau, listeOvnis):
          
         equivalance = 31
@@ -79,6 +91,8 @@ class Collision:
         VR = vaisseau.x + vaisseau.imageVaisseau.width()/2 - equivalance      #position droite du carré rouge
         VT = vaisseau.y - vaisseau.imageVaisseau.height()/2 + equivalance     #position haut du carré rouge
         VB = vaisseau.y + vaisseau.imageVaisseau.height()/2 - equivalance     #position bas du carré rouge
+
+
         
         for ovni in listeOvnis:
             
@@ -91,6 +105,8 @@ class Collision:
             if VT <= OB and VT >= OT or VY <= OB and VY >= OT or VB >= OT and VB <= OB:
                 if VR >= OL and VR <= OR or VL <= OR and VL >= OL or VX <= OR and VX >= OL:
                     print(True)
+                    #vie -= 1
+                    
                 
             # print(OL)
             # print(ovni.imageOvni.width())
@@ -99,10 +115,10 @@ class Collision:
             # print("Position of souris: " + str(e.x))
             # print("Position of vaisseau-top: " + str(VL))
     
-    def missiles_ovnis(self, listeMissiles, listeOvnis):
-
+    def missiles_ovnis(self, listeMissiles, listeOvnis, score):
+        
         equivalance = 0
-
+        
         for missile in listeMissiles:
 
             MY = missile.y      #position Y milieu du carré rouge 
@@ -122,4 +138,16 @@ class Collision:
                 # la logique des collisions avec RB
                 if MT <= OB and MT >= OT or MY <= OB and MY >= OT or MB >= OT and MB <= OB:
                     if MR >= OL and MR <= OR or ML <= OR and ML >= OL or MX <= OR and MX >= OL:
-                        print(True)
+                        score.score += 1
+                        print(score.score)
+
+                        
+                        
+                        
+                        
+                        
+                        
+
+
+
+                        
