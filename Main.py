@@ -75,12 +75,13 @@ if __name__ == "__main__":
      global timerCreateAsteroide 
      global timerCreateOvnis 
      global timerMoveOvnis 
-
+     global vitesseOvni
      timerMoveMissile = 0
      timerMoveAsteroide = 0
      timerCreateAsteroide = 0
      timerCreateOvnis = 0
      timerMoveOvnis = 0
+     vitesseOvni = 0
         
      if level.niveau == "facile":
             timerMoveMissile = 0.03
@@ -88,6 +89,7 @@ if __name__ == "__main__":
             timerCreateAsteroide = 5
             timerCreateOvnis = 5
             timerMoveOvnis = 0.03
+            vitesseOvni = 2
         # elif level.niveau == "moyen":
         # elif level.niveau == "difficile":
      elif level.niveau == "moyen":
@@ -95,7 +97,8 @@ if __name__ == "__main__":
             timerMoveAsteroide = 0.03
             timerCreateAsteroide = 3
             timerCreateOvnis = 3
-            timerMoveOvnis = 0.01
+            timerMoveOvnis = 0.03
+            vitesseOvni = 5
 
 
             # Le vaisseau se deplace en suivant la position de la souris
@@ -286,8 +289,9 @@ if __name__ == "__main__":
         
         for ovn in listeOvnis: # forEach qui passe dans toute la list listAsteroide
             # print(aste.direction)
-                aireDeJeu.canva.move(ovn.instanceOvni,0 ,2)#deplacement de l'ovnis en x = 0, y = 2
-                ovn.y += 2
+                aireDeJeu.canva.move(ovn.instanceOvni,0 ,vitesseOvni)#deplacement de l'ovnis en x = 0, y = 2
+                ovn.y += vitesseOvni
+                
                 if ovn.y >= 500:
                     aireDeJeu.canva.delete(ovn.instanceOvni)
                     listeOvnis.remove(ovn)
