@@ -90,8 +90,7 @@ if __name__ == "__main__":
             timerCreateOvnis = 5
             timerMoveOvnis = 0.03
             vitesseOvni = 2
-        # elif level.niveau == "moyen":
-        # elif level.niveau == "difficile":
+        
      elif level.niveau == "moyen":
             timerMoveMissile = 0.03
             timerMoveAsteroide = 0.03
@@ -99,6 +98,15 @@ if __name__ == "__main__":
             timerCreateOvnis = 3
             timerMoveOvnis = 0.03
             vitesseOvni = 5
+
+     elif level.niveau == "difficile":
+            timerMoveMissile = 0.03
+            timerMoveAsteroide = 0.03
+            timerCreateAsteroide = 1
+            timerCreateOvnis = 0.5
+            timerMoveOvnis = 0.03
+            vitesseOvni = 10
+        
 
 
             # Le vaisseau se deplace en suivant la position de la souris
@@ -138,10 +146,12 @@ if __name__ == "__main__":
         buttonsContainerAlignement.pack() # pour centrer et donner un padding
         buttonEasyLevel = Button(buttonsContainerAlignement, text="Facile", command=level.level_facile)
         buttonMediumLevel = Button(buttonsContainerAlignement, text="Moyen", command=level.level_moyen)
+        buttonHardLevel = Button(buttonsContainerAlignement, text="Difficile", command=level.level_difficile)
         buttonCommencer = Button(buttonsContainerAlignement, text="Commencer", command=niveau_facile)
         buttonCommencer.grid(column=4, row=1,padx=15)
-        buttonEasyLevel.grid(column=2, row=1,padx=15)
-        buttonMediumLevel.grid(column=3, row=1, padx=15)
+        buttonEasyLevel.grid(column=1, row=1,padx=15)
+        buttonMediumLevel.grid(column=2, row=1, padx=15)
+        buttonHardLevel.grid(column=3, row=1, padx=15)
        
    
         
