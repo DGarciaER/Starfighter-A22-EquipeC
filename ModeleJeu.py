@@ -47,6 +47,16 @@ class Missile:
         self.imageMissile = tk.PhotoImage(file='Images/missile.png').subsample(3,3)
         self.instanceMissile = container.canva.create_image(self.x, self.y, image=self.imageMissile)
 
+class Mine:
+    """
+    Class Mines permet d'initialiser un objet mine, prend les coordonnes ainsi que le container tkinter comme paramatre.
+    """
+    def __init__(self,container, x, y):
+        self.x = x
+        self.y = y
+        self.imageMine = tk.PhotoImage(file='Images/mine.png').subsample(7,7)
+        self.instanceMine = container.canva.create_image(self.x, self.y, image=self.imageMine)
+
 class Laser:
     """
     Cette classe permet de creer un laser, qui sera tire par l'utilisateur
@@ -65,6 +75,7 @@ class Ovni:
         self.y = y
         self.imageOvni = tk.PhotoImage(file='Images/ovni.png').subsample(4,4) #Creation de l'image Ovni
         self.instanceOvni = container.canva.create_image(self.x,self.y,anchor=tk.NW,image=self.imageOvni)
+        self.direction = "right"
         
 class Asteroide:
     """

@@ -122,6 +122,12 @@ if __name__ == "__main__":
 
     # mouvement des astroides
     mvmt.moveAsteroide(menu.timerMoveAsteroide, spawns.listAsteroides, aireDeJeu)
+
+    # shoot mines des ovnis
+    shoot.shootMine(menu.timerShootMine, spawns.listeOvnis, aireDeJeu)
+
+    # mouvement de mines
+    mvmt.mouvMines(shoot.listMine, aireDeJeu)
         
     # verifier les collision entre tout les objets du jeu
     collision.verfierToutesCollisions(vaisseau,spawns.listeOvnis, shoot.listeMissiles ,spawns.listAsteroides, playerControl)

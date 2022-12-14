@@ -1,7 +1,7 @@
 import random
 from threading import Timer
 from ControleurMenu import ControleurMenu
-from ModeleJeu import AireDeJeu, Asteroide, Laser, Ovni, Missile
+from ModeleJeu import Asteroide, Laser, Ovni, Missile, Mine
 from VueJeu import VueJeu
 from tkinter import *
 import tkinter as tk
@@ -41,10 +41,25 @@ class Mouvement(tk.Frame):
     """Methode qui permet le mouvement des ovnis"""
     def moveOvnis(self, timerMoveOvnis, vitesseOvni, listeOvnis, aireDeJeu):
         
+        vitesseHorizontalDroite = 6
+        vitesseHorizontalGauche = -6
+
         for ovn in listeOvnis: # forEach qui passe dans toute la list listAsteroide
-            # print(aste.direction)
-                aireDeJeu.canva.move(ovn.instanceOvni,0 ,vitesseOvni)#deplacement de l'ovnis en x = 0, y = 2
+                
                 ovn.y += vitesseOvni
+                if(ovn.x >= 400):
+                    ovn.direction = "left"
+                elif(ovn.x <= 5):
+                    ovn.direction = "right"
+
+                if(ovn.direction == "right"):
+                    aireDeJeu.canva.move(ovn.instanceOvni,vitesseHorizontalDroite ,vitesseOvni)#deplacement de l'ovnis en x = 0, y = 2
+                    ovn.x += vitesseHorizontalDroite
+                else:
+                    aireDeJeu.canva.move(ovn.instanceOvni,vitesseHorizontalGauche ,vitesseOvni)#deplacement de l'ovnis en x = 0, y = 2
+                    ovn.x += vitesseHorizontalGauche
+
+                
                 
                 if ovn.y >= 500:
                     aireDeJeu.canva.delete(ovn.instanceOvni)
@@ -76,6 +91,19 @@ class Mouvement(tk.Frame):
         mouvAsteroideTimer = Timer(timerMoveAsteroide, partial(self.moveAsteroide, timerMoveAsteroide, listAsteroide, aireDeJeu))
         mouvAsteroideTimer.start()
 
+    def mouvMines(self,listeMine, aireDeJeu):
+        vitesseMine = 3
+        for mine in listeMine:
+            aireDeJeu.canva.move(mine.instanceMine,0 ,vitesseMine)#deplacement de l'ovnis en x = 0, y = 2
+            mine.y += vitesseMine
+            
+            if mine.y >= 500:
+                aireDeJeu.canva.delete(mine.instanceMine)
+                listeMine.remove(mine)
+
+        mouvMineTimer = Timer(0.03, partial(self.mouvMines, listeMine, aireDeJeu))
+        mouvMineTimer.start()
+
 
 
 
@@ -85,6 +113,7 @@ class Shoot(tk.Frame):
 
         self.listeMissiles = []
         self.listLaser = []
+        self.listMine = []
         self.imageV = tk.PhotoImage(file='Images/Vaisseau.png').subsample(12,12)
 
     """Methode qui creer un missile et l'ajoute a la listeMissiles"""
@@ -99,7 +128,14 @@ class Shoot(tk.Frame):
             self.listLaser.append(Laser(aireDeJeu, (event.x + self.imageV.width()/4 + 3), 0, (event.x + self.imageV.width()/4 + 5), event.y))
             aireDeJeu.canva.after(1000, partial(self.deleteLaser, aireDeJeu))
             aireDeJeu.canva.after(5000, partial(self.resetCooldown, vaisseau))
-    
+
+    def shootMine(self,timerShootMine, listeOvnis, aireDeJeu):
+        for ovni in listeOvnis:
+            self.listMine.append(Mine(aireDeJeu, ovni.x + 26, ovni.y + 20))
+
+        shootMineTimer = Timer(timerShootMine, partial(self.shootMine, timerShootMine, listeOvnis, aireDeJeu))
+        shootMineTimer.start()
+
     def resetCooldown(self, vaisseau):
         vaisseau.laserCooldown = False
         print( "in resetCooldown")
@@ -303,8 +339,7 @@ class ControleurJeu(tk.Frame):
         if self.running:                                            # Si le timer est en marche,
             self.stopwatch_label.after_cancel(self.update_time)     # Stop le update du timer
             self.running = False                                    # On remet la variable à False
-            
-
+           
     def resetTimer(self):
         '''Cette fonction s'occupe de reinitialiser le timer, on l'appel lorsqu'on recommence une nouvelle partie'''
         if self.running:                                            # Si le timer est en marche,
@@ -333,26 +368,3 @@ class ControleurJeu(tk.Frame):
             self.stopwatch_label.config(text='Timer:  ' + self.minutes_string + ':' + self.seconds_string + ':' + self.milliseconds_string)
             self.update_time = self.stopwatch_label.after(10, self.updateTimer) #Variabe update_time, appelé dans pauseTimer() et resetTimer() avec .after_cancel
 
-
-    #FIN PARTIE TIMER **-----------------------------------------------------------------------------------**
-        
-
-
-
-    #PARTIE CSV **-----------------------------------------------------------------------------------**
-
-    #Ecriture du score et username dans fichier csv
-    # def openCSV(self, score, username):
-    #     '''Fonction pour enregistrer les noms d'utilisateurs ainsi que leurs scores pour la session
-        
-    #     :param score: le score de la partie (format 00:00:00) enregistre dans une liste a chauque partie fini, et le sauvegarde dans le fichier csv que quand l'utilisateur rentre son nom (ou non)
-    #     :type score: string 
-    #     :param username: le nom d'utilisateur insire dans avec le boutton "Quitter" ou "Nouvelle score"
-    #     :type username: string
-    #     '''
-    #     f = open('score.csv', 'a', newline='')
-    #     writer = csv.writer(f)
-    #     writer.writerow([username, score])
-    #     f.close()
-
-    #Window pop up pour le username
