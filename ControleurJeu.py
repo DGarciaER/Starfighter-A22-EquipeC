@@ -260,8 +260,110 @@ class Collision:
                         
                         
                         
-                        
+class ControleurJeu(tk.Frame):
+    def __init__(self):
+
+        self.update_time = ''
+        self.running = False #Pour controller l'etat du timer (en marche ou non)
+        
+        #On initialise les variables de temps a 0
+        self.minutes = 0
+        self.seconds = 0
+        self.milliseconds = 0
+
+        #On initialise les variables string a des chaines vides. Pour l'affichage et sauvegarder les scores (temps)
+        self.minutes_string = ""
+        self.seconds_string = ""
+        self.milliseconds_string = ""
+
+        #variables score/csv
+        self.listScore = []
+        self.nbrTourBoucle = 0
+        self.username = ''
 
 
 
-                        
+
+        #PARTIE POUR TIMER **-----------------------------------------------------------------------------------**    
+    
+    
+    def create_widget(self, container):
+        '''Fonction pour créer le label du timer'''
+        self.stopwatch_label = tk.Label(container, text='Timer:  00:00:00', fg='#FFFD85',background= "#41157A")
+        self.stopwatch_label.grid(column=3, row=1, padx=10)
+
+    def startTimer(self):
+        '''Fonction pour commencer le timer. Appeler lorsqu'on click sur le carre rouge'''
+        if not self.running:                                        # Si le timer n'est en marche,
+                self.running = True                                 # Alors on met la variable a True
+                self.updateTimer()                                  # Et on commence le timer
+
+    def pauseTimer(self):
+        '''Fonction pour arreter le timer, on l'appel quand l'utilisateur perds'''
+        if self.running:                                            # Si le timer est en marche,
+            self.stopwatch_label.after_cancel(self.update_time)     # Stop le update du timer
+            self.running = False                                    # On remet la variable à False
+            
+
+    def resetTimer(self):
+        '''Cette fonction s'occupe de reinitialiser le timer, on l'appel lorsqu'on recommence une nouvelle partie'''
+        if self.running:                                            # Si le timer est en marche,
+            self.stopwatch_label.after_cancel(self.update_time)     # Alors on arrete le timer
+            self.running = False                                    # On remet la variable à False
+        #On remet les variables et le label du timer a zero
+        self.minutes, self.seconds, self.milliseconds = 0, 0, 0
+        self.stopwatch_label.config(text='00:00:00')
+
+    def updateTimer(self):
+        '''Cette fonction s'occupe de mettre a jour les valeurs (millisecondes, secondes et minutes) et les valeurs_string(Pour affichage et sauvegarder les scores)'''
+
+        #Conditions pour update les valeurs
+        if self.running:                                            # SI le timer est en marche,
+            self.milliseconds += 1                                  # +1 milliseconde
+            if self.milliseconds == 100:                            # SI les millisecondes arrives a 1000,
+                self.seconds += 1                                   # Alors les secondes augmenteront de 1
+                self.milliseconds = 0                               # Et on remet les millisecondes a 0
+            if self.seconds == 60:                                  # SI les secondes arrivent à 60,
+                self.minutes += 1                                   # Alors +1 minute
+                self.seconds = 0                                    # Et on remet les secondes à 0
+            #On transforme les ints en string
+            self.minutes_string = f'{self.minutes}' if self.minutes > 9 else f'0{self.minutes}'
+            self.seconds_string = f'{self.seconds}' if self.seconds > 9 else f'0{self.seconds}'
+            self.milliseconds_string = f'{self.milliseconds}' if self.milliseconds > 9 else f'0{self.milliseconds}'
+            self.stopwatch_label.config(text='Timer:  ' + self.minutes_string + ':' + self.seconds_string + ':' + self.milliseconds_string)
+            self.update_time = self.stopwatch_label.after(10, self.updateTimer) #Variabe update_time, appelé dans pauseTimer() et resetTimer() avec .after_cancel
+
+
+    #FIN PARTIE TIMER **-----------------------------------------------------------------------------------**
+        
+
+
+
+    #PARTIE CSV **-----------------------------------------------------------------------------------**
+
+    #Ecriture du score et username dans fichier csv
+    # def openCSV(self, score, username):
+    #     '''Fonction pour enregistrer les noms d'utilisateurs ainsi que leurs scores pour la session
+        
+    #     :param score: le score de la partie (format 00:00:00) enregistre dans une liste a chauque partie fini, et le sauvegarde dans le fichier csv que quand l'utilisateur rentre son nom (ou non)
+    #     :type score: string 
+    #     :param username: le nom d'utilisateur insire dans avec le boutton "Quitter" ou "Nouvelle score"
+    #     :type username: string
+    #     '''
+    #     f = open('score.csv', 'a', newline='')
+    #     writer = csv.writer(f)
+    #     writer.writerow([username, score])
+    #     f.close()
+
+    #Window pop up pour le username
+    def setUsername(self, x):
+        '''Setter pour le username. Utilise dans le main pour prendre le nom avec simpledialogs.askstring. Ensuite on utilise le username dans openCSV()
+        
+        :param x: le return de la fonction simpledialogs.askstring, c'est a dire le nom d'utilisateur entree par l'usager
+        :type x: string
+        '''
+        if not x == None: # La fonction simpledialogs.askstring a deux boutton, 'OK' et 'Cancel'. Quand on appuie sur 'OK' la fonction retourne ce qu'il y a dans le text box (string
+            # vide si on n'ecrit rien) et le type None quand on appuie sur cancel. 
+            self.username = x + "\n"
+        else:
+            self.username = x

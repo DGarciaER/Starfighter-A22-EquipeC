@@ -1,7 +1,7 @@
 import tkinter as tk
 from functools import partial
-from ControleurJeu import Collision, Mouvement, PlayerControl, Shoot, Spawns
-from ControleurMenu import ControleurMenu, Choix
+from ControleurJeu import Collision, Mouvement, PlayerControl, Shoot, Spawns, ControleurJeu
+from ControleurMenu import ControleurMenu, Choix, Enregistrer
 from ModeleJeu import AireDeJeu, Player, Vaiseau
 from ModeleMenu import Niveau
 from VueJeu import VueJeu
@@ -9,6 +9,9 @@ import random
 
 
 if __name__ == "__main__":
+
+
+
 
     # créer une fenetre tk avec un titre, un background et des dimensions
     couleurTheme = "#41157A"
@@ -28,7 +31,8 @@ if __name__ == "__main__":
     # créer un containter et le centrer dans la fenetre tk
     mainContainer = tk.Frame(root, background= couleurTheme)
     mainContainer.pack() # pour centrer et donner un padding
-    
+
+
     # créer un titre de jeu et le mettre dans un grid en lui donnant du padding
     titre = tk.Label(mainContainer, text="StarFighter", fg='#FFFC33', background= couleurTheme)
     titre.configure(font=("MV Boli", 25, "bold"))
@@ -45,10 +49,6 @@ if __name__ == "__main__":
     # créer un container pour afficher la barre de vie
     hpLabel = tk.Label(statsContainer, text="   Vies:  ", fg='#FFFD85',background= couleurTheme)
     hpLabel.grid(column=2, row=1, padx=10) # pour centrer et donner un padding
-
-    # créer un container pour afficher les abilités
-    ability = tk.Label(statsContainer, text="   Abilités:  None  ", fg='#FFFD85',background= couleurTheme)
-    ability.grid(column=3, row=1, padx=10) # pour centrer et donner un padding
 
     # créer un container des buttonset le mettre dans un grid en lui donnant du padding
     buttonsContainer = tk.Canvas(mainContainer, background= couleurTheme, highlightthickness=0)
@@ -70,15 +70,27 @@ if __name__ == "__main__":
     buttonQuitter.grid(column=3, row=1, padx=15)
 
     #-------------------------------------------------------------------------------------------------------------------------------
+        # Affichage du menu et la récuperation des choix
 
-    # Affichage du menu et la récuperation des choix
+    jeu = ControleurJeu()
+    enregistrer = Enregistrer()
     menu = ControleurMenu()
     level = Niveau()
     choix = Choix()
-    choix.afficherChoixLevel(menu, level)
+    choix.afficherChoixLevel(menu, level, enregistrer, jeu)
+
+    
+    
+    aireDeJeu = AireDeJeu(mainContainer)
+    jeu.create_widget(statsContainer)
+    jeu.startTimer()
+
+
+    
+
 
     # créer l'aire de jeu et le mettre dans un grid en lui donnant du padding
-    aireDeJeu = AireDeJeu(mainContainer)
+    
     # créer un player qui contient les scores et les vies
     player = Player()
     # controler le player
@@ -89,7 +101,6 @@ if __name__ == "__main__":
     mvmt = Mouvement()
     shoot = Shoot()
     collision = Collision()
-
 
     # Le vaisseau se deplace en suivant la position de la souris
     aireDeJeu.canva.bind('<Motion>', partial(mvmt.moveVaisseau, vaisseau, aireDeJeu))
