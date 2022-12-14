@@ -111,7 +111,7 @@ class Collision:
             # la logique des collisions avec RB
             if VT <= OB and VT >= OT or VY <= OB and VY >= OT or VB >= OT and VB <= OB:
                 if VR >= OL and VR <= OR or VL <= OR and VL >= OL or VX <= OR and VX >= OL:
-                    PlayerControl.perte_hp()
+                    self.PlayerControl.perte_hp()
                     
                 
             # print(OL)
