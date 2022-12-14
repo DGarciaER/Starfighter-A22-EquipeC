@@ -1,75 +1,63 @@
 import tkinter as tk
 from tkinter import *
-from threading import Timer
-from ControleurJeu import Mouvement, Ovnis, Shoot
-
-from ModeleJeu import AireDeJeu, Asteroide, Niveau
+from functools import partial
 
 
 class ControleurMenu(tk.Frame):
-    def __init__(self, container, window=None):
-        super().__init__(window)
-
-        self.timerMoveMissile = 0
-        self.timerMoveAsteroide = 0
-        self.timerCreateAsteroide = 0
-        self.timerCreateOvnis = 0
-        self.timerMoveOvnis = 0
-        self.vitesseOvni = 0
-        
-        self.aireDeJeu = AireDeJeu(container)
-        self.mvmt = Mouvement(container)
-        self.shoot = Shoot(container)
-        self.ast = Asteroide(container)
-        self.ovni = Ovnis(container)
-        self.level = Niveau()
+    def __init__(self):
+        self.timerMoveMissile = 0.03
+        self.timerMoveAsteroide = 0.03
+        self.timerCreateAsteroide = 3
+        self.timerCreateOvnis = 2
+        self.timerMoveOvnis = 0.03
+        self.vitesseOvni = 4
 
     
-    def niveau_facile(self):
-        if self.level.niveau == "facile":
+    def niveau(self, level):
+        if level.niveau == "facile":
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
             self.timerCreateAsteroide = 5
             self.timerCreateOvnis = 5
             self.timerMoveOvnis = 0.03
             self.vitesseOvni = 2
+            print("facile")
         
-        elif self.level.niveau == "moyen":
+        elif level.niveau == "moyen":
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
             self.timerCreateAsteroide = 3
             self.timerCreateOvnis = 3
             self.timerMoveOvnis = 0.03
             self.vitesseOvni = 5
+            print("moyen")
 
-        elif self.level.niveau == "difficile":
+        elif level.niveau == "difficile":
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
             self.timerCreateAsteroide = 1
             self.timerCreateOvnis = 0.5
             self.timerMoveOvnis = 0.03
             self.vitesseOvni = 10
+            print("fadicafasdcile")
         
 
+class Choix:
+    def __init__(self):
+        pass
 
-            # Le vaisseau se deplace en suivant la position de la souris
-        self.aireDeJeu.canva.bind('<Motion>', self.mvmt.moveVaisseau())
-
-            # Un missile est tiré lorsqu'on fait un click gauche de la souris
-        self.aireDeJeu.canva.bind('<Button-1>', self.shoot.shootMissile())
-
-        # Deux lasers sont tirés lorsqu'on fait un double-click gauche de la souris
-        self.aireDeJeu.canva.bind('<Button-3>', self.shoot.shootLaser())
-        
-        wait = Timer(self.timerMoveMissile, self.mvmt.moveMissile())
-        wait.start()
-        waitA = Timer(self.timerCreateAsteroide, self.ast.createAsteroide())
-        waitA.start()
-        waitA = Timer(self.timerMoveAsteroide, self.ast.moveAsteroide())
-        waitA.start()
-        
-        #creation ovnis
-        waitB = Timer(self.timerCreateOvnis, self.ovni.createOvnis())
-        waitB.start()
-        waitB = Timer(self.timerMoveOvnis, self.ovni.moveOvnis())
-        waitB.start()
+    def afficherChoixLevel(self,menu,level):
+    #creation de la fenetre
+        fenetreLevel = tk.Tk()
+        fenetreLevel.title("Choix du niveau")
+        fenetreLevel.geometry("300x300")
+        buttonsContainerAlignement = tk.Canvas(fenetreLevel, highlightthickness=0)
+        buttonsContainerAlignement.pack() # pour centrer et donner un padding
+        buttonEasyLevel = Button(buttonsContainerAlignement, text="Facile", command=level.level_facile)
+        buttonMediumLevel = Button(buttonsContainerAlignement, text="Moyen", command=level.level_moyen)
+        buttonHardLevel = Button(buttonsContainerAlignement, text="Difficile", command=level.level_difficile)
+        buttonCommencer = Button(buttonsContainerAlignement, text="Commencer", command=partial(menu.niveau, level))
+        buttonCommencer.grid(column=1, row=4,padx=15, pady=10)
+        buttonEasyLevel.grid(column=1, row=1,padx=15, pady=10)
+        buttonMediumLevel.grid(column=1, row=2, padx=15, pady=10)
+        buttonHardLevel.grid(column=1, row=3, padx=15, pady=10)
