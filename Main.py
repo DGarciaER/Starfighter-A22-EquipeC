@@ -1,5 +1,5 @@
 import tkinter as tk
-from ControleurJeu import ControleurJeu, Collision, PlayerControl
+from ControleurJeu import ControleurJeu, Collision, Mouvement, PlayerControl
 from ModeleJeu import AireDeJeu, Player, Vaiseau, Ovni, Missile, Asteroide, Laser, Niveau
 from VueJeu import VueJeu
 from tkinter import *
@@ -70,68 +70,69 @@ if __name__ == "__main__":
     couleurButtons = "#E22866"
 
     
-
+    mvmt = Mouvement(mainContainer)
     def niveau_facile():
-     global timerMoveMissile 
-     global timerMoveAsteroide 
-     global timerCreateAsteroide 
-     global timerCreateOvnis 
-     global timerMoveOvnis 
-     global vitesseOvni
-     timerMoveMissile = 0
-     timerMoveAsteroide = 0
-     timerCreateAsteroide = 0
-     timerCreateOvnis = 0
-     timerMoveOvnis = 0
-     vitesseOvni = 0
-        
-     if level.niveau == "facile":
-            timerMoveMissile = 0.03
-            timerMoveAsteroide = 0.03
-            timerCreateAsteroide = 5
-            timerCreateOvnis = 5
-            timerMoveOvnis = 0.03
-            vitesseOvni = 2
-        
-     elif level.niveau == "moyen":
-            timerMoveMissile = 0.03
-            timerMoveAsteroide = 0.03
-            timerCreateAsteroide = 3
-            timerCreateOvnis = 3
-            timerMoveOvnis = 0.03
-            vitesseOvni = 5
+        global timerMoveMissile 
+        global timerMoveAsteroide 
+        global timerCreateAsteroide 
+        global timerCreateOvnis 
+        global timerMoveOvnis 
+        global vitesseOvni
+        timerMoveMissile = 0
+        timerMoveAsteroide = 0
+        timerCreateAsteroide = 0
+        timerCreateOvnis = 0
+        timerMoveOvnis = 0
+        vitesseOvni = 0
+            
+        if level.niveau == "facile":
+                timerMoveMissile = 0.03
+                timerMoveAsteroide = 0.03
+                timerCreateAsteroide = 5
+                timerCreateOvnis = 5
+                timerMoveOvnis = 0.03
+                vitesseOvni = 2
+            
+        elif level.niveau == "moyen":
+                timerMoveMissile = 0.03
+                timerMoveAsteroide = 0.03
+                timerCreateAsteroide = 3
+                timerCreateOvnis = 3
+                timerMoveOvnis = 0.03
+                vitesseOvni = 5
 
-     elif level.niveau == "difficile":
-            timerMoveMissile = 0.03
-            timerMoveAsteroide = 0.03
-            timerCreateAsteroide = 1
-            timerCreateOvnis = 0.5
-            timerMoveOvnis = 0.03
-            vitesseOvni = 10
-        
+        elif level.niveau == "difficile":
+                timerMoveMissile = 0.03
+                timerMoveAsteroide = 0.03
+                timerCreateAsteroide = 1
+                timerCreateOvnis = 0.5
+                timerMoveOvnis = 0.03
+                vitesseOvni = 10
+            
 
 
-            # Le vaisseau se deplace en suivant la position de la souris
-     aireDeJeu.canva.bind('<Motion>', moveVaisseau)
+                # Le vaisseau se deplace en suivant la position de la souris
+        aireDeJeu.canva.bind('<Motion>', mvmt.moveVaisseau)
 
-            # Un missile est tiré lorsqu'on fait un click gauche de la souris
-     aireDeJeu.canva.bind('<Button-1>', shootMissile)
+                # Un missile est tiré lorsqu'on fait un click gauche de la souris
+        aireDeJeu.canva.bind('<Button-1>', shootMissile)
 
-        # Deux lasers sont tirés lorsqu'on fait un double-click gauche de la souris
-     aireDeJeu.canva.bind('<Button-3>', shootLaser)
-        
-     wait = Timer(timerMoveMissile,moveMissile)
-     wait.start()
-     waitA = Timer(timerCreateAsteroide, createAsteroide)
-     waitA.start()
-     waitA = Timer(timerMoveAsteroide, moveAsteroide)
-     waitA.start()
-        
-        #creation ovnis
-     waitB = Timer(timerCreateOvnis, createOvnis)
-     waitB.start()
-     waitB = Timer(timerMoveOvnis, moveOvnis)
-     waitB.start()
+            # Deux lasers sont tirés lorsqu'on fait un double-click gauche de la souris
+        aireDeJeu.canva.bind('<Button-3>', shootLaser)
+            
+        wait = Timer(timerMoveMissile,moveMissile)
+        wait.start()
+        waitA = Timer(timerCreateAsteroide, createAsteroide)
+        waitA.start()
+        waitA = Timer(timerMoveAsteroide, moveAsteroide)
+        waitA.start()
+            
+            #creation ovnis
+        waitB = Timer(timerCreateOvnis, createOvnis)
+        waitB.start()
+        waitB = Timer(timerMoveOvnis, moveOvnis)
+        waitB.start()
+     
        
             
         
