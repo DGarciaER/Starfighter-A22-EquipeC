@@ -10,9 +10,6 @@ import random
 
 if __name__ == "__main__":
 
-
-
-
     # créer une fenetre tk avec un titre, un background et des dimensions
     couleurTheme = "#41157A"
     

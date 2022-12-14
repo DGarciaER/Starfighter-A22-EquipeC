@@ -356,14 +356,3 @@ class ControleurJeu(tk.Frame):
     #     f.close()
 
     #Window pop up pour le username
-    def setUsername(self, x):
-        '''Setter pour le username. Utilise dans le main pour prendre le nom avec simpledialogs.askstring. Ensuite on utilise le username dans openCSV()
-        
-        :param x: le return de la fonction simpledialogs.askstring, c'est a dire le nom d'utilisateur entree par l'usager
-        :type x: string
-        '''
-        if not x == None: # La fonction simpledialogs.askstring a deux boutton, 'OK' et 'Cancel'. Quand on appuie sur 'OK' la fonction retourne ce qu'il y a dans le text box (string
-            # vide si on n'ecrit rien) et le type None quand on appuie sur cancel. 
-            self.username = x + "\n"
-        else:
-            self.username = x
