@@ -1,4 +1,3 @@
-
 from VueJeu import VueJeu
 from tkinter import *
 import tkinter as tk
@@ -100,7 +99,6 @@ class Collision:
         VB = vaisseau.y + vaisseau.imageVaisseau.height()/2 - equivalance     #position bas du carré rouge
 
 
-        
         for ovni in listeOvnis:
             
             OL = ovni.x                           #position gauche du pion
