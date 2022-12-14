@@ -1,3 +1,8 @@
+
+import random
+from threading import Timer
+from ControleurMenu import ControleurMenu
+from ModeleJeu import AireDeJeu, Asteroide, Laser, Ovni, Vaiseau, Missile
 from VueJeu import VueJeu
 from tkinter import *
 import tkinter as tk
@@ -8,65 +13,78 @@ import c31Geometry2 as c31
 class ControleurJeu(tk.Frame):
     def __init__(self, container, window=None):
         super().__init__(window)
-        # self.vueJeu = VueJeu()
-        self.window = window
-        
-        #self.carrORouge = CarrORouge(containOR)
-        #self.vaisseaux = Vaisseau(containOR)
-        #self.vaisseaux.img_2.canvas
-        #self.carrORouge.carrORouge.canvas.bind("<Motion>", sOLf.moveCR)
-        #self.vueJeu.affichORCarrORouge(self.carrerouge.carrerouge)
-
-        
-        
-
-
-
-
-    # def my_callback(sOLf,event):
-    #       print( str(event.x) +","+ str(event.y))#affiche position en x OT y de la souris
-
-
-    #Add Image To canvas
     
-
-    # def moveCR(sOLf, event): # move Carré Rouge
-    #     """
-    #     COTte méthode pORmOT de bougOR le carré rouge dans le canvas.
-    #     paramOTre:
-    #     event
-    #     """  
-    #     global img
-    #     img = PhotoImage(file="C:/Img/vaisseau.gif")
-    #     sOLf.my_img = sOLf.my_canvas.create_image(event.x,event.y, image=img)#x=0, y=0
-    #     sOLf.my_labOL.config(text="Coordinates: x" + str(event.x) + "y : " + str(event.y) )
-        # sOLf.carrORouge.carrORouge.translatOTo(c31.Vecteur(e.x, e.y))
-        # sOLf.carrORouge.carrORouge.sOT_position(c31.Vecteur(e.x,e.y))
-        # sOLf.vueJeu.affichORCarrORouge(sOLf.carrORouge.carrORouge)
-
-class Mouvement:
-    def __init__(self):
-        pass
+        self.window = window
 
 
+class Mouvement(tk.Frame):
 
-    #fait bougOR le vaisseau
-    def moveVaisseau(self,e):
-        pass
-        # global imgVaisseau
-        # On ajoute cOTte ligne pour ne pas dupliquOR des vaisseaux en utilisant toujours le même vaisseau
+    def __init__(self, container, window=None):
+        super().__init__(window)
 
-        #RécupérOR l'image de Vaisseau OT reduire sa taille avec la méthode subsample
+        self.aireDeJeu = AireDeJeu(container)
+        self.vaisseau = Vaiseau(self.aireDeJeu)
+        self.imageV = self.vaisseau.imageVaisseau
 
 
-        # CréOR une instance de Vaisseau OT l'affichOR dans l'aire de jeu en lui donnant une position x, y
-        # instanceVaisseau = aireDeJeu.create_image(e.x,e.y, image=imgVaisseau)#x=0, y=0
-        # sOLf.positionVaiseau['x'] = e.x
-        # sOLf.positionVaiseau['y'] = e.y
+        """Methode qui permet le mouvement du vaisseau lorsque la souris se deplace"""
+    def moveVaisseau(self, e):
 
-    # def moveAstORoid(sOLf,e):
-    #     instanceAstORoid  = aireDe
+        #Récupérer l'image de Vaisseau et reduire sa taille avec la méthode subsample
+        # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
+        self.imageV = tk.PhotoImage(file='Images/Vaisseau.png').subsample(12,12)
 
+        # FIXME non utilise...
+        instanceV = self.aireDeJeu.canva.create_image(e.x,e.y, image=self.imageV)
+
+        self.vaisseau.setPositions(e.x,e.y)
+
+class Shoot(tk.Frame):
+    def __init__(self, container, window=None):
+        super().__init__(window)
+
+        self.listeMissiles = []
+        self.listLaser = []
+        
+        self.imageV = self.vaisseau.imageVaisseau
+        self.aireDeJeu = AireDeJeu(container)
+        self.vaisseau = Vaiseau(self.aireDeJeu)
+
+    def shootMissile(self, event):
+        self.listeMissiles.append(Missile(self.aireDeJeu, event.x, event.y))
+
+    def moveMissile(self):
+        for missile in self.listeMissiles:
+            self.aireDeJeu.canva.move(missile.instanceMissile, 0, -10)
+            missile.y -=10
+
+            if missile.y <= 0:
+                self.aireDeJeu.canva.delete(missile.instanceMissile)
+                self.listeMissiles.remove(missile)
+                # print('deleted')
+        wait = Timer(0.03, self.moveMissile())
+        wait.start()
+
+    """Methode qui creer les lasers et les ajoute a la listLaser"""
+    def shootLaser(self ,event):
+        if self.vaisseau.laserCooldown == False:
+            self.vaisseau.laserCooldown = True
+            self.listLaser.append(Laser(self.aireDeJeu, (event.x - self.imageV.width()/4 - 4), 0, (event.x - self.imageV.width()/4 - 2), event.y))
+            self.listLaser.append(Laser(self.aireDeJeu, (event.x + self.imageV.width()/4 + 3), 0, (event.x + self.imageV.width()/4 + 5), event.y))
+            self.aireDeJeu.canva.after(1000, self.deleteLaser())
+            self.aireDeJeu.canva.after(5000, self.resetCooldown())
+    
+    def resetCooldown(self):
+        self.vaisseau.laserCooldown = False
+        print( "in resetCooldown")
+
+    """Methode qui supprime les lasers"""
+    def deleteLaser(self):
+        self.aireDeJeu.canva.delete(self.listLaser[1].rectangleLaser)
+        del self.listLaser[1]
+        self.aireDeJeu.canva.delete(self.listLaser[0].rectangleLaser)   
+        del self.listLaser[0]
+        print('laser deleted')
 
 
 class PlayerControl:    # FIXME erreur de parametre quand on appelle perte_hp
@@ -84,7 +102,107 @@ class PlayerControl:    # FIXME erreur de parametre quand on appelle perte_hp
         if self.player.hp > 0:
             self.player.hp -= 1
 
+
+class Ovnis(tk.Frame):
+
+    def __init__(self, container, window=None):
+        super().__init__(window)
+        self.listeOvnis = []
+
+        self.aireDeJeu = AireDeJeu(container)
+        self.cMenu = ControleurMenu(self.aireDeJeu)
+    
+    def createOvnis(self):
+        if random.randint(0,1) == 0:
+            # on fait partir l'ovnis a gauche
+            x = random.randint(25,200)
+            self.listeOvnis.append(Ovni(self.aireDeJeu,x,-40))
+
+        else:
+            #on fait partir l'ovnis à droite
+            x = random.randint(250,425)
+            self.listeOvnis.append(Ovni(self.aireDeJeu,x,-40))
+
+        print(self.cMenu.timerMoveOvnis)
+
+        waitB = Timer(self.cMenu.timerCreateOvnis, self.createOvnis())#cree un ovnis a chaque 3s
+        waitB.start()
+
+    """Methode qui permet le mouvement des ovnis"""
+    def moveOvnis(self):
+        
+        for ovn in self.listeOvnis: # forEach qui passe dans toute la list listAsteroide
+            # print(aste.direction)
+                self.aireDeJeu.canva.move(ovn.instanceOvni,0 ,self.cMenu.vitesseOvni)#deplacement de l'ovnis en x = 0, y = 2
+                ovn.y += self.cMenu.vitesseOvni
+                
+                if ovn.y >= 500:
+                    self.aireDeJeu.canva.delete(ovn.instanceOvni)
+                    self.listeOvnis.remove(ovn)
+        
+        newWait = Timer(self.cMenu.timerMoveOvnis, self.moveOvnis())
+        newWait.start()
+
+
+    
+
+
+
+class Asteroides(tk.Frame):
+    def __init__(self, container, window=None):
+        super().__init__(window)
+        self.listAsteroides = []
+
+        self.aireDeJeu = AireDeJeu(container)
+    
+    def createAsteroide(self):
+        
+        if random.randint(0,1) == 0:
+            # on fait partir l'asteroide a gauche
+            x = random.randint(25,200)
+            # print(x)
+            self.listAsteroide.append(Asteroide(self.aireDeJeu,x,-40,"bas-droit"))
+
+        else:
+            #on fait partir l'asteroide à droite
+            x = random.randint(250,425)
+            self.listAsteroide.append(Asteroide(self.aireDeJeu,x,-40,"bas-gauche"))
+
+
+        waitA = Timer(8, self.createAsteroide())
+        waitA.start()
+
+    """Methode qui permet le mouvement des asteroides"""
+    def moveAsteroide(self):
+        
+        for aste in self.listAsteroide: # forEach qui passe dans toute la list listAsteroide
+            # print(aste.direction)
+
+            if aste.direction == "bas-droit":
+                self.aireDeJeu.canva.move(aste.instanceAsteroide,5 ,5)
+                aste.y += 5
+                aste.x += 5
+
+            elif aste.direction == "bas-gauche":
+                self.aireDeJeu.canva.move(aste.instanceAsteroide,-5 ,5)
+                aste.y += 5
+                aste.x -= 5
+
+
+            if aste.y >= 500:
+                self.aireDeJeu.canva.delete(aste.instanceAsteroide)
+                self.listAsteroide.remove(aste)
+
+                # print('deleted')
+            
+
+        newWait = Timer(0.03, self.moveAsteroide())
+        newWait.start()
+
+
+
 class Collision:
+        
     
 
     def vaseau_ennemie(self, vaisseau, listeOvnis, playerControl):
@@ -109,7 +227,7 @@ class Collision:
             # la logique des collisions avec RB
             if VT <= OB and VT >= OT or VY <= OB and VY >= OT or VB >= OT and VB <= OB:
                 if VR >= OL and VR <= OR or VL <= OR and VL >= OL or VX <= OR and VX >= OL:
-                    self.PlayerControl.perte_hp()
+                    PlayerControl.perte_hp()
                     
                 
             # print(OL)
