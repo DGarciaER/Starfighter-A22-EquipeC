@@ -382,6 +382,7 @@ class Collision:
                     else:
                         player.hp -= 3
                     listeMine.remove(mine)
+                    
 
     def laser_ovnis(self, vaisseau, listLaser, listeOvnis, playerControl):
         
