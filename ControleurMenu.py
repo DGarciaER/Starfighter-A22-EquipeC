@@ -11,19 +11,21 @@ class ControleurMenu(tk.Frame):
     la difficulté choisi par l'utilisateur, dans la methode afficherChoixLevel() de la classe Choix.
     '''
     def __init__(self): #Constructeur
+        self.commence = False
         self.timerMoveMissile = 0.03
         self.timerMoveAsteroide = 0.03
         self.timerCreateAsteroide = 3
         self.timerCreateOvnis = 3
         self.timerMoveOvnis = 0.03
-        self.vitesseOvni = 4
+        self.vitesseOvniY = 0
+        self.vitesseOvniX = 0
         self.timerShootMine = 2
         self.timerCreatePU = 5
         self.timerMovePU = 0.03
         self.vitessePU = 2
 
     
-    def niveau(self, level):
+    def niveau(self, level, fenetreLevel):
         '''
         Cette methode s'occupe de modifier les reglages du jeu en fonction de la difficulté choisi par l'utilisateur
         '''
@@ -34,14 +36,17 @@ class ControleurMenu(tk.Frame):
         if level.niveau == "facile":
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
-            self.timerCreateAsteroide = 5       #Taux d'apparition des ovnis, 1 mine chaque x secondes
-            self.timerCreateOvnis = 5           #Taux d'apparition des ovnis, 1 mine chaque x secondes
+            self.timerCreateAsteroide = 1       #Taux d'apparition des ovnis, 1 mine chaque x secondes
+            self.timerCreateOvnis = 10           #Taux d'apparition des ovnis, 1 mine chaque x secondes
             self.timerMoveOvnis = 0.03
-            self.vitesseOvni = 2
+            self.vitesseOvniY = 2
+            self.vitesseOvniX = 6
             self.timerShootMine = 5             #Taux d'apparition des mines laissées par les ovnis, 1 mine chaque x secondes
             self.timerCreatePU = 5              #Taux d'apparition des bonus (PowerUp), 1 bonus chaque x secondes
             self.timerMovePU = 0.03
             self.vitessePU = 2                  #Vitesse des bonus (PowerUp)
+            self.commence = True
+            fenetreLevel.destroy()
         
         #Si le niveau de difficulte choisi est MOYEN:
         elif level.niveau == "moyen":
@@ -50,11 +55,14 @@ class ControleurMenu(tk.Frame):
             self.timerCreateAsteroide = 3
             self.timerCreateOvnis = 3
             self.timerMoveOvnis = 0.03
-            self.vitesseOvni = 5
+            self.vitesseOvniY = 5
+            self.vitesseOvniX = 8
             self.timerShootMine = 3
             self.timerCreatePU = 5
             self.timerMovePU = 0.03
             self.vitessePU = 2
+            self.commence = True
+            fenetreLevel.destroy()
             
         #Si le niveau de difficulte choisi est DIFFICILE:
         elif level.niveau == "difficile":
@@ -63,11 +71,16 @@ class ControleurMenu(tk.Frame):
             self.timerCreateAsteroide = 1
             self.timerCreateOvnis = 0.5
             self.timerMoveOvnis = 0.03
-            self.vitesseOvni = 10
-            self.timerShootMine = 1
+            self.vitesseOvniY = 10
+            self.vitesseOvniX = 12
+            self.timerShootMine = 4
             self.timerCreatePU = 5
             self.timerMovePU = 0.03
             self.vitessePU = 2
+            self.commence = True
+            fenetreLevel.destroy()
+        
+
         
 
 class Choix:
@@ -84,13 +97,14 @@ class Choix:
         buttonEasyLevel = Button(buttonsContainerAlignement, text="Facile", command=level.level_facile)
         buttonMediumLevel = Button(buttonsContainerAlignement, text="Moyen", command=level.level_moyen)
         buttonHardLevel = Button(buttonsContainerAlignement, text="Difficile", command=level.level_difficile)
-        buttonCommencer = Button(buttonsContainerAlignement, text="Commencer", command=partial(menu.niveau, level))
+        buttonCommencer = Button(buttonsContainerAlignement, text="Commencer", command=partial(menu.niveau, level, fenetreLevel))
         buttonEnregistrer = Button(buttonsContainerAlignement, text="Enregistrer", command=partial(enregistrer.askUsername))
         buttonCommencer.grid(column=1, row=4,padx=15, pady=10)
         buttonEasyLevel.grid(column=1, row=1,padx=15, pady=10)
         buttonMediumLevel.grid(column=1, row=2, padx=15, pady=10)
         buttonHardLevel.grid(column=1, row=3, padx=15, pady=10)
         buttonEnregistrer.grid(column=2, row=2, padx=15)
+        fenetreLevel.mainloop()
 
 class Enregistrer:
     def __init__(self):

@@ -49,15 +49,15 @@ class Mouvement(tk.Frame):
         mouvMissileTimer.start()
 
     
-    def moveOvnis(self, timerMoveOvnis, vitesseOvni, listeOvnis, aireDeJeu):
+    def moveOvnis(self, timerMoveOvnis, vitesseOvniY,vitesseOvniX, listeOvnis, aireDeJeu):
         """Methode qui permet le mouvement des ovnis"""
         
-        vitesseHorizontalDroite = 6
-        vitesseHorizontalGauche = -6
+        vitesseHorizontalDroite = vitesseOvniX
+        vitesseHorizontalGauche = -vitesseOvniX
 
         for ovn in listeOvnis: # forEach qui passe dans toute la list listAsteroide
                 
-                ovn.y += vitesseOvni
+                ovn.y += vitesseOvniY
                 if(ovn.x >= 400):               # Si x >= 400, ca veut dire que l'ovni est a gauche de l'aire de jeu.
                     ovn.direction = "left"      # On s'en sert en bas pour definir si il faut bouger l'ovni a gauche ou a droite
 
@@ -65,10 +65,10 @@ class Mouvement(tk.Frame):
                     ovn.direction = "right"     # On s'en sert en bas pour definir si il faut bouger l'ovni a gauche ou a droite
 
                 if(ovn.direction == "right"):
-                    aireDeJeu.canva.move(ovn.instanceOvni,vitesseHorizontalDroite ,vitesseOvni)#deplacement de l'ovnis en x = 0, y = 2
+                    aireDeJeu.canva.move(ovn.instanceOvni,vitesseHorizontalDroite ,vitesseOvniY)#deplacement de l'ovnis en x = 0, y = 2
                     ovn.x += vitesseHorizontalDroite
                 else:
-                    aireDeJeu.canva.move(ovn.instanceOvni,vitesseHorizontalGauche ,vitesseOvni)#deplacement de l'ovnis en x = 0, y = 2
+                    aireDeJeu.canva.move(ovn.instanceOvni,vitesseHorizontalGauche ,vitesseOvniY)#deplacement de l'ovnis en x = 0, y = 2
                     ovn.x += vitesseHorizontalGauche
 
                 
@@ -77,7 +77,7 @@ class Mouvement(tk.Frame):
                     aireDeJeu.canva.delete(ovn.instanceOvni)
                     listeOvnis.remove(ovn)
         
-        mouvOvniTimer = Timer(timerMoveOvnis, partial(self.moveOvnis, timerMoveOvnis, vitesseOvni, listeOvnis, aireDeJeu))
+        mouvOvniTimer = Timer(timerMoveOvnis, partial(self.moveOvnis, timerMoveOvnis, vitesseOvniY,vitesseOvniX, listeOvnis, aireDeJeu))
         mouvOvniTimer.start()
 
     
@@ -279,7 +279,7 @@ class Collision:
 
     def vaisseau_ennemie(self, vaisseau, listeOvnis, playerControl): # Collision entre un vaisseau et un ovni
          
-        equivalance = 31
+        equivalance = 31 # taille du cadre de l'image
          
         VY = vaisseau.y      #position Y milieu du carré rouge 
         VX = vaisseau.x      #position X milieu du carré rouge 
@@ -300,11 +300,12 @@ class Collision:
             if VT <= OB and VT >= OT or VY <= OB and VY >= OT or VB >= OT and VB <= OB:
                 if VR >= OL and VR <= OR or VL <= OR and VL >= OL or VX <= OR and VX >= OL:
                     playerControl.perte_hp()
+                    listeOvnis.remove(ovni)
                     
     
     def missiles_ovnis(self, listeMissiles, listeOvnis, playerControl, ): # Collision entre un missile et un ovni
         
-        equivalance = 0
+        equivalance = 0 # taille du cadre de l'image
         
         for missile in listeMissiles:
 
@@ -337,32 +338,41 @@ class Collision:
 
                         
     def vaisseau_asteroids(self, vaisseau, listeAsteroids, player): #Collision entre le vaisseau de l'utilisateur et un asteroide
-        equivalance = 0
+
+        equivalanceV = 31
 
         VY = vaisseau.y      #position Y milieu du carré rouge 
         VX = vaisseau.x      #position X milieu du carré rouge 
-        VL = vaisseau.x - vaisseau.imageVaisseau.width()/2 + equivalance      #position gauche du carré rouge 
-        VR = vaisseau.x + vaisseau.imageVaisseau.width()/2 - equivalance      #position droite du carré rouge
-        VT = vaisseau.y - vaisseau.imageVaisseau.height()/2 + equivalance     #position haut du carré rouge
-        VB = vaisseau.y + vaisseau.imageVaisseau.height()/2 - equivalance     #position bas du carré rouge
+        VL = vaisseau.x - vaisseau.imageVaisseau.width()/2 + equivalanceV      #position gauche du carré rouge 
+        VR = vaisseau.x + vaisseau.imageVaisseau.width()/2 - equivalanceV      #position droite du carré rouge
+        VT = vaisseau.y - vaisseau.imageVaisseau.height()/2 + equivalanceV + 10   #position haut du carré rouge
+        VB = vaisseau.y + vaisseau.imageVaisseau.height()/2 - equivalanceV     #position bas du carré rouge
 
         for asteroid in listeAsteroids:
 
-            AL = asteroid.x                           #position gauche du pion
-            AR = asteroid.x + asteroid.imageAsteroide.width()  #position droite du pion
-            AT = asteroid.y                           #position haut du pion
-            AB = asteroid.y + asteroid.imageAsteroide.height() #position bas du pion
+            if asteroid.direction == "bas-droit":
+                equivalance = 20 # taille du cadre de l'image 
+                AL = asteroid.x + equivalance                     #position gauche du pion
+                AR = asteroid.x + asteroid.imageAsteroide.width()  #position droite du pion
+                AT = asteroid.y + equivalance                         #position haut du pion
+                AB = asteroid.y + asteroid.imageAsteroide.height()#position bas du pion
+            else:
+                AL = asteroid.x                     #position gauche du pion
+                AR = asteroid.x + asteroid.imageAsteroide.width() - 20#position droite du pion
+                AT = asteroid.y + 30                         #position haut du pion
+                AB = asteroid.y + asteroid.imageAsteroide.height()#position bas du pion
 
             # la logique des collisions avec RB
             if VT <= AB and VT >= AT or VY <= AB and VY >= AT or VB >= AT and VB <= AB:
                 if VR >= AL and VR <= AR or VL <= AR and VL >= AL or VX <= AR and VX >= AL:
                     print("asteroid")
                     player.hp = 0   # se fait aussi avec un setter (meilleure pratique)
+                    listeAsteroids.remove(asteroid)
                     # faire apparaitre explosion
 
     def vaisseau_PowerUp(self, vaisseau, listPU, playerControl): # Detecte collision entre le vaisseau et un bonus
         
-        equivalance = 31
+        equivalance = 31 # taille du cadre de l'image
          
         VY = vaisseau.y      #position Y milieu du carré rouge 
         VX = vaisseau.x      #position X milieu du carré rouge 
@@ -390,21 +400,21 @@ class Collision:
 
     def vaisseau_mine(self, vaisseau, listeMine, player): # Detecte une collision entre un vaisseau et une mine
          
-        equivalanceXR = 0
-        equivalanceXL = 40
-        equivalancey = 60
+        equivalanceXR = 0 # taille du cadre de l'image
+        equivalanceXL = 40 # taille du cadre de l'image
+        equivalancey = 60 # taille du cadre de l'image
          
         VY = vaisseau.y      #position Y milieu du carré rouge 
         VX = vaisseau.x      #position X milieu du carré rouge 
         VL = vaisseau.x - vaisseau.imageVaisseau.width()/2 + equivalanceXL      #position gauche du carré rouge 
         VR = vaisseau.x + vaisseau.imageVaisseau.width()/2 - equivalanceXR      #position droite du carré rouge
         VT = vaisseau.y - vaisseau.imageVaisseau.height()/2 + equivalancey     #position haut du carré rouge
-        VB = vaisseau.y + vaisseau.imageVaisseau.height()/2 - equivalancey    #position bas du carré rouge
+        VB = vaisseau.y + vaisseau.imageVaisseau.height()/2 - 20    #position bas du carré rouge
 
 
         for mine in listeMine:
             
-            ML = mine.x                           #position gauche du pion
+            ML = mine.x - 5                         #position gauche du pion
             MR = mine.x + mine.imageMine.width()  #position droite du pion
             MT = mine.y                           #position haut du pion
             MB = mine.y + mine.imageMine.height() #position bas du pion
@@ -420,8 +430,6 @@ class Collision:
                     
 
     def laser_ovnis(self, vaisseau, listLaser, listeOvnis, playerControl): # Detecte une collision entre un laser et un ovni
-        
-        equivalance = 0
         
         for laser in listLaser:
             for ovni in listeOvnis:
