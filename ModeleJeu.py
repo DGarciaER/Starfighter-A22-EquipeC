@@ -1,3 +1,4 @@
+import random
 import tkinter as tk
 
 class AireDeJeu:
@@ -62,10 +63,10 @@ class Laser:
     Cette classe permet de creer un laser, qui sera tire par l'utilisateur
     Parameters: Le container tkinter (AirDeJeu) et les coordonnes du laser
     """
-    def __init__(self,container, xCoinDroitHaut, yCoinDroitHaut, xCoinDroitBas, yCoinDroitBas, ):
-        # self.x = x
+    def __init__(self,container, xCoinGaucheHaut, yCoinGaucheHaut, xCoinDroitBas, yCoinDroitBas, ):
         # self.y = y
-        self.rectangleLaser = container.canva.create_rectangle(xCoinDroitHaut, yCoinDroitHaut, xCoinDroitBas, yCoinDroitBas, fill="red")
+        self.rectangleLaser = container.canva.create_rectangle(xCoinGaucheHaut, yCoinGaucheHaut, xCoinDroitBas, yCoinDroitBas, fill="red")
+        self.x = xCoinGaucheHaut + ((xCoinDroitBas - xCoinGaucheHaut)/2) # x c'est la moitie du width du laser
         # self.imageMissile = tk.PhotoImage(file='Images/missile.png').subsample(3,3)
         # self.instanceMissile = container.canva.create_image(self.x, self.y, image=self.imageMissile)
 
@@ -95,4 +96,17 @@ class Asteroide:
         self.instanceAsteroide = container.canva.create_image(self.x, self.y, anchor=tk.NW,image=self.imageAsteroide) #Placer l'image dans le container
         
 
+class PowerUp:
+    def __init__(self,container, x, y):
+        self.x = x
+        self.y = y
+        if random.randint(0,1) == 0:
+            self.type = "Score"
+            self.imagePU = tk.PhotoImage(file='Images/powerUP_Score.png').subsample(7,7) #Creation de l'image Powerup TODO generation aleatoire pour l'image et string? pour differencier quel powerup c'est
+        else:
+            self.type = "Lives"
+            self.imagePU = tk.PhotoImage(file='Images/powerUP_vie.png').subsample(10,10)
             
+        print(self.type)
+        
+        self.instancePU = container.canva.create_image(self.x,self.y,anchor=tk.NW,image=self.imagePU)

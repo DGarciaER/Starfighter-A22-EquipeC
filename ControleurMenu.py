@@ -14,6 +14,9 @@ class ControleurMenu(tk.Frame):
         self.timerMoveOvnis = 0.03
         self.vitesseOvni = 4
         self.timerShootMine = 2
+        self.timerCreatePU = 5
+        self.timerMovePU = 0.03
+        self.vitessePU = 2
 
     
     def niveau(self, level):
@@ -27,6 +30,9 @@ class ControleurMenu(tk.Frame):
             self.timerMoveOvnis = 0.03
             self.vitesseOvni = 2
             self.timerShootMine = 5
+            self.timerCreatePU = 5
+            self.timerMovePU = 0.03
+            self.vitessePU = 2
         
         elif level.niveau == "moyen":
             self.timerMoveMissile = 0.03
@@ -36,6 +42,10 @@ class ControleurMenu(tk.Frame):
             self.timerMoveOvnis = 0.03
             self.vitesseOvni = 5
             self.timerShootMine = 3
+            self.timerCreatePU = 5
+            self.timerMovePU = 0.03
+            self.vitessePU = 2
+            
 
         elif level.niveau == "difficile":
             self.timerMoveMissile = 0.03
@@ -45,6 +55,9 @@ class ControleurMenu(tk.Frame):
             self.timerMoveOvnis = 0.03
             self.vitesseOvni = 10
             self.timerShootMine = 1
+            self.timerCreatePU = 5
+            self.timerMovePU = 0.03
+            self.vitessePU = 2
         
 
 class Choix:
