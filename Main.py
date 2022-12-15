@@ -75,16 +75,10 @@ if __name__ == "__main__":
     level = Niveau()
     choix = Choix()
     choix.afficherChoixLevel(menu, level, enregistrer, jeu)
-
-    
     
     aireDeJeu = AireDeJeu(mainContainer)
     jeu.create_widget(statsContainer)
     jeu.startTimer()
-
-
-    
-
 
     # créer l'aire de jeu et le mettre dans un grid en lui donnant du padding
     
