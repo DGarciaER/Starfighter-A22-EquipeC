@@ -1,3 +1,4 @@
+import random
 import tkinter as tk
 
 class AireDeJeu:
@@ -95,4 +96,17 @@ class Asteroide:
         self.instanceAsteroide = container.canva.create_image(self.x, self.y, anchor=tk.NW,image=self.imageAsteroide) #Placer l'image dans le container
         
 
+class PowerUp:
+    def __init__(self,container, x, y):
+        self.x = x
+        self.y = y
+        if random.randint(0,1) == 0:
+            self.type = "Score"
+            self.imagePU = tk.PhotoImage(file='Images/powerUP_Score.png').subsample(7,7) #Creation de l'image Powerup TODO generation aleatoire pour l'image et string? pour differencier quel powerup c'est
+        else:
+            self.type = "Lives"
+            self.imagePU = tk.PhotoImage(file='Images/powerUP_vie.png').subsample(10,10)
             
+        print(self.type)
+        
+        self.instancePU = container.canva.create_image(self.x,self.y,anchor=tk.NW,image=self.imagePU)

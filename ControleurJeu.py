@@ -1,7 +1,7 @@
 import random
 from threading import Timer
 from ControleurMenu import ControleurMenu
-from ModeleJeu import Asteroide, Laser, Ovni, Missile, Mine
+from ModeleJeu import Asteroide, Laser, Ovni, Missile, Mine, PowerUp
 from VueJeu import VueJeu
 from tkinter import *
 import tkinter as tk
@@ -104,6 +104,22 @@ class Mouvement(tk.Frame):
         mouvMineTimer = Timer(0.03, partial(self.mouvMines, listeMine, aireDeJeu))
         mouvMineTimer.start()
 
+    """Methode qui permet le mouvement des powerup"""
+    def movePowerUp(self, timerMovePU, vitessePU, listePU, aireDeJeu):
+
+        for pu in listePU: # forEach qui passe dans toute la list listAsteroide
+                
+            pu.y += vitessePU
+
+            aireDeJeu.canva.move(pu.instancePU, 0,vitessePU)
+                
+            if pu.y >= 500:
+                aireDeJeu.canva.delete(pu.instancePU)
+                listePU.remove(pu)
+        
+        mouvPUTimer = Timer(timerMovePU, partial(self.movePowerUp, timerMovePU, vitessePU, listePU, aireDeJeu))
+        mouvPUTimer.start()
+
 
 
 
@@ -178,6 +194,7 @@ class Spawns(tk.Frame):
     def __init__(self):
         self.listeOvnis = []
         self.listAsteroides = []
+        self.listPU = []
 
     '''methode pour creer des ovnis avec une postion x aleatoire'''
     def createOvnis(self, timerCreateOvnis, aireDeJeu):
@@ -210,6 +227,21 @@ class Spawns(tk.Frame):
 
         createAstroideTimer = Timer(timerCreateAsteroide, partial(self.createAsteroide, timerCreateAsteroide, aireDeJeu))
         createAstroideTimer.start()
+
+    '''methode pour creer des powerup avec une postion x aleatoire'''
+    def createPU(self, timerCreatePU, aireDeJeu):
+
+        if random.randint(0,1) == 0:
+            # on fait partir le powerup a gauche
+            x = random.randint(25,200)
+            self.listPU.append(PowerUp(aireDeJeu,x,-40))
+        else:
+            #on fait partir le powerup à droite
+            x = random.randint(250,425)
+            self.listPU.append(PowerUp(aireDeJeu,x,-40))
+
+        createPUTimer = Timer(timerCreatePU, partial(self.createPU, timerCreatePU, aireDeJeu))  #cree un powerup a chaque n secondes
+        createPUTimer.start()
 
 
 class Collision:

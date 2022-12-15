@@ -117,11 +117,17 @@ if __name__ == "__main__":
     # creation astroides
     spawns.createAsteroide(menu.timerCreateAsteroide, aireDeJeu)
 
+    # creation powerup
+    spawns.createPU(menu.timerCreatePU, aireDeJeu)
+
     # mouvement des ovnis
     mvmt.moveOvnis(menu.timerMoveOvnis, menu.vitesseOvni, spawns.listeOvnis, aireDeJeu)
 
     # mouvement des astroides
     mvmt.moveAsteroide(menu.timerMoveAsteroide, spawns.listAsteroides, aireDeJeu)
+
+    # mouvement des powerup
+    mvmt.movePowerUp(menu.timerMovePU, menu.vitessePU, spawns.listPU, aireDeJeu)
 
     # shoot mines des ovnis
     shoot.shootMine(menu.timerShootMine, spawns.listeOvnis, aireDeJeu)
@@ -130,7 +136,7 @@ if __name__ == "__main__":
     mvmt.mouvMines(shoot.listMine, aireDeJeu)
         
     # verifier les collision entre tout les objets du jeu
-    collision.verfierToutesCollisions(vaisseau,spawns.listeOvnis, shoot.listeMissiles ,spawns.listAsteroides, playerControl)
+    collision.verfierToutesCollisions(vaisseau,spawns.listeOvnis, shoot.listeMissiles ,spawns.listAsteroides, playerControl)    #TODO ajouter collision avec powerup
 
     # faire raffraichir les stats du player tout a long du jeu
     playerControl.updatePlayer(scoreLabel, hpLabel)
