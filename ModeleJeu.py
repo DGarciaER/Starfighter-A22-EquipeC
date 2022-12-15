@@ -9,17 +9,20 @@ class AireDeJeu:
     def __init__(self, container):
         self.height = 500
         self.width = 450 
-        self.imageBackground = tk.PhotoImage(file='Images/Background.png').subsample(2,2)
-
+        self.imageBackground = tk.PhotoImage(file='Images/Background.png').subsample(2,2) #Image de fond
+        
         self.canva = tk.Canvas(container, height=self.height, width=self.width)
         self.canva.create_image(10,10, image=self.imageBackground)
         self.canva.grid(column=1, row=1, padx=20) # pour centrer et donner un padding
-        # self.canva.config(cursor="none")
+        self.canva.config(cursor="none")
 
 class Player:
+    '''
+    Cette classe initialise un joueur. L'utilisateur commence toujours une partie avec 0 de score et 10 points de vie (HealthPoints)
+    '''
     def __init__(self):
         self.score = 0
-        self.hp = 10
+        self.hp = 10 #Points de vie
 
 
 class Vaiseau:
@@ -71,6 +74,9 @@ class Laser:
         # self.instanceMissile = container.canva.create_image(self.x, self.y, image=self.imageMissile)
 
 class Ovni:
+    '''
+    Cette classe s'occupe d'initialiser un objet ovni. Il comprend les cordonees ainsi que l'image de l'ovni.
+    '''
     def __init__(self,container, x, y):
         self.x = x
         self.y = y
@@ -97,9 +103,13 @@ class Asteroide:
         
 
 class PowerUp:
+    '''
+    Cette classe permet d'initialiser les bonus (power up). Elle est utilise dans controleur jeu.
+    '''
     def __init__(self,container, x, y):
         self.x = x
         self.y = y
+        # On defini ici, de façon aleatoire (50% de chance), si le bonus est un bonus de vie ou un bonus de score.
         if random.randint(0,1) == 0:
             self.type = "Score"
             self.imagePU = tk.PhotoImage(file='Images/powerUP_Score.png').subsample(7,7) #Creation de l'image Powerup TODO generation aleatoire pour l'image et string? pour differencier quel powerup c'est

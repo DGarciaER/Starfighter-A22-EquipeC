@@ -21,12 +21,15 @@ if __name__ == "__main__":
 
     #creation fenetre root
     root = tk.Tk()
+    # root.config(cursor="none")
     root.title("Star Fighter")
     root.config(background= couleurTheme)
     root.geometry("510x680")
 
     # créer un containter et le centrer dans la fenetre tk
     mainContainer = tk.Frame(root, background= couleurTheme)
+    mainContainer.config(cursor="none")
+    
     mainContainer.pack() # pour centrer et donner un padding
 
 
@@ -69,6 +72,7 @@ if __name__ == "__main__":
     #-------------------------------------------------------------------------------------------------------------------------------
         # Affichage du menu et la récuperation des choix
 
+    #Initialisation des objets du jeu
     jeu = ControleurJeu()
     enregistrer = Enregistrer()
     menu = ControleurMenu()
@@ -77,17 +81,13 @@ if __name__ == "__main__":
     choix.afficherChoixLevel(menu, level, enregistrer, jeu)
 
     
-    
-    aireDeJeu = AireDeJeu(mainContainer)
-    jeu.create_widget(statsContainer)
-    jeu.startTimer()
-
-
-    
-
-
     # créer l'aire de jeu et le mettre dans un grid en lui donnant du padding
+    aireDeJeu = AireDeJeu(mainContainer)
     
+    jeu.create_widget(statsContainer) #HUD
+    jeu.startTimer() #Timer, commence en mem
+
+
     # créer un player qui contient les scores et les vies
     player = Player()
     # controler le player
