@@ -63,10 +63,10 @@ class Laser:
     Cette classe permet de creer un laser, qui sera tire par l'utilisateur
     Parameters: Le container tkinter (AirDeJeu) et les coordonnes du laser
     """
-    def __init__(self,container, xCoinDroitHaut, yCoinDroitHaut, xCoinDroitBas, yCoinDroitBas, ):
-        # self.x = x
+    def __init__(self,container, xCoinGaucheHaut, yCoinGaucheHaut, xCoinDroitBas, yCoinDroitBas, ):
         # self.y = y
-        self.rectangleLaser = container.canva.create_rectangle(xCoinDroitHaut, yCoinDroitHaut, xCoinDroitBas, yCoinDroitBas, fill="red")
+        self.rectangleLaser = container.canva.create_rectangle(xCoinGaucheHaut, yCoinGaucheHaut, xCoinDroitBas, yCoinDroitBas, fill="red")
+        self.x = xCoinGaucheHaut + ((xCoinDroitBas - xCoinGaucheHaut)/2) # x c'est la moitie du width du laser
         # self.imageMissile = tk.PhotoImage(file='Images/missile.png').subsample(3,3)
         # self.instanceMissile = container.canva.create_image(self.x, self.y, image=self.imageMissile)
 

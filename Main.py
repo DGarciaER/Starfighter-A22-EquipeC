@@ -136,7 +136,7 @@ if __name__ == "__main__":
     mvmt.mouvMines(shoot.listMine, aireDeJeu)
         
     # verifier les collision entre tout les objets du jeu
-    collision.verfierToutesCollisions(vaisseau,spawns.listeOvnis, shoot.listeMissiles ,spawns.listAsteroides, spawns.listPU ,playerControl)    #TODO ajouter collision avec powerup
+    collision.verfierToutesCollisions(vaisseau,spawns.listeOvnis, shoot.listeMissiles ,spawns.listAsteroides, shoot.listMine, shoot.listLaser ,spawns.listPU, player, playerControl)    #TODO ajouter collision avec powerup
 
     # faire raffraichir les stats du player tout a long du jeu
     playerControl.updatePlayer(scoreLabel, hpLabel)
