@@ -15,8 +15,8 @@ class AireDeJeu:
         self.canva.create_image(10,10, image=self.imageBackground)
         self.canva.grid(column=1, row=1, padx=20) # pour centrer et donner un padding
         self.canva.config(cursor="none")
-        self.canva.configure(bg="black")
-        self.imageBackground = None
+        # self.canva.configure(bg="black")
+        # self.imageBackground = None
         
 
 class Player:
@@ -132,5 +132,5 @@ class Explosion:
     def __init__(self,container, x, y):
         self.x = x
         self.y = y
-        self.imageExplosion = tk.PhotoImage(file='Images/explosion1.png').subsample(4,4) #Creation de l'image Explosion
+        self.imageExplosion = tk.PhotoImage(file='Images/explosion1.png').subsample(10,10) #Creation de l'image Explosion
         self.instanceExplosion = container.canva.create_image(self.x,self.y,anchor=tk.NW,image=self.imageExplosion)
