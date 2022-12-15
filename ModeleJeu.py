@@ -132,5 +132,5 @@ class Explosion:
     def __init__(self,container, x, y):
         self.x = x
         self.y = y
-        self.imageExplosion = tk.PhotoImage(file='Images/explosion1.png').subsample(10,10) #Creation de l'image Explosion
+        self.imageExplosion = tk.PhotoImage(file='Images/explosion1.png').subsample(15,15) #Creation de l'image Explosion
         self.instanceExplosion = container.canva.create_image(self.x,self.y,anchor=tk.NW,image=self.imageExplosion)

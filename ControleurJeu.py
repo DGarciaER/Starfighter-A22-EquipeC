@@ -464,10 +464,9 @@ class Collision:
     def startExplosion(self, aireDeJeu, x, y):
         self.listExplosion.append(Explosion(aireDeJeu,x, y))
         print(len(self.listExplosion))
-        aireDeJeu.canva.after(1000, partial(self.deleteExplosion, aireDeJeu))
+        aireDeJeu.canva.after(500, partial(self.deleteExplosion, aireDeJeu))
 
     def deleteExplosion(self, aireDeJeu):
-        print("deleteExp")
         aireDeJeu.canva.delete(self.listExplosion[0].imageExplosion)
         del self.listExplosion[0]
 
