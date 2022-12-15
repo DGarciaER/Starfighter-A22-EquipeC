@@ -454,6 +454,12 @@ class Collision:
                     playerControl.augmentation_score()
                     listeOvnis.remove(ovni)
 
+    def startExplosion(self):
+        pass
+
+    def deleteExplosion(self):
+        pass
+
     def verfierToutesCollisions(self, vaisseau, listeOvnis, listeMissiles, listeAsteroides, listeMine, listLaser , listPU, difficulte, player, playerControl):
         self.vaisseau_ennemie(vaisseau,listeOvnis, playerControl)
         self.missiles_ovnis(listeMissiles,listeOvnis, playerControl)

@@ -121,3 +121,13 @@ class PowerUp:
         print(self.type)
         
         self.instancePU = container.canva.create_image(self.x,self.y,anchor=tk.NW,image=self.imagePU)
+    
+class Explosion:
+    '''
+    Cette classe permet d'initialiser les explosions. Elle est utilise dans controleur jeu.
+    '''
+    def __init__(self,container, x, y):
+        self.x = x
+        self.y = y
+        self.imageExplosion = tk.PhotoImage(file='Images/explosion1.png').subsample(4,4) #Creation de l'image Explosion
+        self.instanceExplosion = container.canva.create_image(self.x,self.y,anchor=tk.NW,image=self.imageExplosion)
