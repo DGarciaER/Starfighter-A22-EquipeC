@@ -152,8 +152,15 @@ class Shoot(tk.Frame):
         self.imageV = tk.PhotoImage(file='Images/Vaisseau.png').subsample(12,12)
 
     """Methode qui creer un missile et l'ajoute a la listeMissiles"""
-    def shootMissile(self, aireDeJeu, event):
-        self.listeMissiles.append(Missile(aireDeJeu, event.x, event.y))
+    def shootMissile(self, aireDeJeu, vaisseau, event):
+        print(vaisseau.missileCooldown)
+        if vaisseau.missileCooldown == False:
+            vaisseau.missileCooldown = True
+            self.listeMissiles.append(Missile(aireDeJeu, event.x, event.y))
+            aireDeJeu.canva.after(350, partial(self.resetMissileCooldown, vaisseau))
+
+    def resetMissileCooldown(self, vaisseau):
+        vaisseau.missileCooldown = False
 
     """Methode qui creer les lasers et les ajoute a la listLaser"""
     def shootLaser(self, aireDeJeu, vaisseau, event):
@@ -162,7 +169,7 @@ class Shoot(tk.Frame):
             self.listLaser.append(Laser(aireDeJeu, (event.x - self.imageV.width()/4 - 4), 0, (event.x - self.imageV.width()/4 - 2), event.y))
             self.listLaser.append(Laser(aireDeJeu, (event.x + self.imageV.width()/4 + 3), 0, (event.x + self.imageV.width()/4 + 5), event.y))
             aireDeJeu.canva.after(1000, partial(self.deleteLaser, aireDeJeu))
-            aireDeJeu.canva.after(1000, partial(self.resetCooldown, vaisseau))
+            aireDeJeu.canva.after(5000, partial(self.resetLaserCooldown, vaisseau))
 
     def shootMine(self,timerShootMine, listeOvnis, aireDeJeu):
         for ovni in listeOvnis:
@@ -171,9 +178,8 @@ class Shoot(tk.Frame):
         shootMineTimer = Timer(timerShootMine, partial(self.shootMine, timerShootMine, listeOvnis, aireDeJeu))
         shootMineTimer.start()
 
-    def resetCooldown(self, vaisseau):
+    def resetLaserCooldown(self, vaisseau):
         vaisseau.laserCooldown = False
-        print( "in resetCooldown")
 
     """Methode qui supprime les lasers"""
     def deleteLaser(self, aireDeJeu):
@@ -337,7 +343,7 @@ class Collision:
 
 
                         
-    def vaisseau_asteroids(self, vaisseau, listeAsteroids, player): #Collision entre le vaisseau de l'utilisateur et un asteroide
+    def vaisseau_asteroids(self, vaisseau, listeAsteroids, difficulte, player): #Collision entre le vaisseau de l'utilisateur et un asteroide
 
         equivalanceV = 31
 
@@ -366,7 +372,13 @@ class Collision:
             if VT <= AB and VT >= AT or VY <= AB and VY >= AT or VB >= AT and VB <= AB:
                 if VR >= AL and VR <= AR or VL <= AR and VL >= AL or VX <= AR and VX >= AL:
                     print("asteroid")
-                    player.hp = 0   # se fait aussi avec un setter (meilleure pratique)
+                    if difficulte == "facile":
+                        if player.hp <= 1:
+                            player.hp = 0
+                        else:
+                            player.hp = 1
+                    else:
+                        player.hp = 0   # se fait aussi avec un setter (meilleure pratique)
                     listeAsteroids.remove(asteroid)
                     # faire apparaitre explosion
 
@@ -442,14 +454,14 @@ class Collision:
                     playerControl.augmentation_score()
                     listeOvnis.remove(ovni)
 
-    def verfierToutesCollisions(self, vaisseau, listeOvnis, listeMissiles, listeAsteroides, listeMine, listLaser , listPU, player, playerControl):
+    def verfierToutesCollisions(self, vaisseau, listeOvnis, listeMissiles, listeAsteroides, listeMine, listLaser , listPU, difficulte, player, playerControl):
         self.vaisseau_ennemie(vaisseau,listeOvnis, playerControl)
         self.missiles_ovnis(listeMissiles,listeOvnis, playerControl)
-        self.vaisseau_asteroids(vaisseau,listeAsteroides, player)
+        self.vaisseau_asteroids(vaisseau,listeAsteroides, difficulte, player)
         self.vaisseau_PowerUp(vaisseau, listPU, playerControl)
         self.vaisseau_mine(vaisseau, listeMine, player)
         self.laser_ovnis(vaisseau, listLaser, listeOvnis, playerControl)
-        verifierCollisionsTimer = Timer(0.03,partial(self.verfierToutesCollisions, vaisseau, listeOvnis, listeMissiles, listeAsteroides, listeMine, listLaser, listPU, player, playerControl))
+        verifierCollisionsTimer = Timer(0.03,partial(self.verfierToutesCollisions, vaisseau, listeOvnis, listeMissiles, listeAsteroides, listeMine, listLaser, listPU, difficulte, player, playerControl))
         verifierCollisionsTimer.start()       
                         
                         

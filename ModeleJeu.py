@@ -35,6 +35,7 @@ class Vaiseau:
         self.x = 0
         self.y = 0
         self.laserCooldown = False
+        self.missileCooldown = False
 
     def setPositions(self,x,y):
         self.x = x
