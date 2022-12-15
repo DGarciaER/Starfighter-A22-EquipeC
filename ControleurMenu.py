@@ -38,7 +38,7 @@ class ControleurMenu(tk.Frame):
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
             self.timerCreateAsteroide = 1       #Taux d'apparition des ovnis, 1 mine chaque x secondes
-            self.timerCreateOvnis = 10           #Taux d'apparition des ovnis, 1 mine chaque x secondes
+            self.timerCreateOvnis = 10          #Taux d'apparition des ovnis, 1 mine chaque x secondes
             self.timerMoveOvnis = 0.03
             self.vitesseOvniY = 2
             self.vitesseOvniX = 6
