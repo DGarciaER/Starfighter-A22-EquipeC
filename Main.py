@@ -142,9 +142,10 @@ if __name__ == "__main__":
 
             # boocler la fenetre tk
             print("hello")
-            root.mainloop()
             verif.verifHP(player, jeu)
             verif.verifGameOver(jeu, aireDeJeu)
+            root.mainloop()
+            
             
         else:
             commencerJeuTimer = Timer(0.03, commencerJeu)
