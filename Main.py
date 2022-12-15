@@ -101,7 +101,7 @@ if __name__ == "__main__":
             aireDeJeu.canva.bind('<Motion>', partial(mvmt.moveVaisseau, vaisseau, aireDeJeu))
 
             # # Un missile est tiré lorsqu'on fait un click gauche de la souris
-            aireDeJeu.canva.bind('<Button-1>', partial(shoot.shootMissile, aireDeJeu))
+            aireDeJeu.canva.bind('<Button-1>', partial(shoot.shootMissile, aireDeJeu, vaisseau))
             # On bouge le missile vers le haut
             mvmt.mouvMissiles(aireDeJeu, shoot.listeMissiles, menu.timerMoveMissile)
 
@@ -134,7 +134,7 @@ if __name__ == "__main__":
             mvmt.mouvMines(shoot.listMine, aireDeJeu)
                 
             # verifier les collision entre tout les objets du jeu
-            collision.verfierToutesCollisions(vaisseau,spawns.listeOvnis, shoot.listeMissiles ,spawns.listAsteroides, shoot.listMine, shoot.listLaser ,spawns.listPU, player, playerControl)    #TODO ajouter collision avec powerup
+            collision.verfierToutesCollisions(vaisseau,spawns.listeOvnis, shoot.listeMissiles ,spawns.listAsteroides, shoot.listMine, shoot.listLaser ,spawns.listPU, menu.difficulte, player, playerControl)    #TODO ajouter collision avec powerup
 
             # faire raffraichir les stats du player tout a long du jeu
             playerControl.updatePlayer(scoreLabel, hpLabel)

@@ -34,6 +34,7 @@ class ControleurMenu(tk.Frame):
 
         #Si le niveau de difficulte choisi est FACILE:
         if level.niveau == "facile":
+            self.difficulte = "facile"
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
             self.timerCreateAsteroide = 1       #Taux d'apparition des ovnis, 1 mine chaque x secondes
@@ -50,6 +51,7 @@ class ControleurMenu(tk.Frame):
         
         #Si le niveau de difficulte choisi est MOYEN:
         elif level.niveau == "moyen":
+            self.difficulte = "moyen"
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
             self.timerCreateAsteroide = 3
@@ -66,6 +68,7 @@ class ControleurMenu(tk.Frame):
             
         #Si le niveau de difficulte choisi est DIFFICILE:
         elif level.niveau == "difficile":
+            self.difficulte = "difficile"
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
             self.timerCreateAsteroide = 1
