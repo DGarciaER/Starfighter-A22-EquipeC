@@ -317,13 +317,42 @@ class Collision:
             # la logique des collisions avec RB
             if VT <= AB and VT >= AT or VY <= AB and VY >= AT or VB >= AT and VB <= AB:
                 if VR >= AL and VR <= AR or VL <= AR and VL >= AL or VX <= AR and VX >= AL:
-                    print("asteroid")    
+                    print("asteroid")
 
-    def verfierToutesCollisions(self, vaisseau, listeOvnis, listeMissiles, listeAsteroides, playerControl):
+    def vaseau_PowerUp(self, vaisseau, listPU, playerControl):
+        
+        equivalance = 31
+         
+        VY = vaisseau.y      #position Y milieu du carré rouge 
+        VX = vaisseau.x      #position X milieu du carré rouge 
+        VL = vaisseau.x - vaisseau.imageVaisseau.width()/2 + equivalance      #position gauche du carré rouge 
+        VR = vaisseau.x + vaisseau.imageVaisseau.width()/2 - equivalance      #position droite du carré rouge
+        VT = vaisseau.y - vaisseau.imageVaisseau.height()/2 + equivalance     #position haut du carré rouge
+        VB = vaisseau.y + vaisseau.imageVaisseau.height()/2 - equivalance     #position bas du carré rouge
+
+
+        for pu in listPU:
+            
+            PL = pu.x                           #position gauche du pion
+            PR = pu.x + pu.imagePU.width()  #position droite du pion
+            PT = pu.y                           #position haut du pion
+            PB = pu.y + pu.imagePU.height() #position bas du pion
+
+            # la logique des collisions avec RB
+            if VT <= PB and VT >= PT or VY <= PB and VY >= PT or VB >= PT and VB <= PB:
+                if VR >= PL and VR <= PR or VL <= PR and VL >= PL or VX <= PR and VX >= PL:
+                    if pu.type == "Score":
+                        playerControl.augmentation_score()
+                    else:
+                        playerControl.augmentation_hp()
+                    listPU.remove(pu)
+
+    def verfierToutesCollisions(self, vaisseau, listeOvnis, listeMissiles, listeAsteroides, listPU, playerControl):
         self.vaseau_ennemie(vaisseau,listeOvnis, playerControl)
         self.missiles_ovnis(listeMissiles,listeOvnis, playerControl)
         self.vaisseau_asteroids(vaisseau,listeAsteroides)
-        verifierCollisionsTimer = Timer(0.2,partial(self.verfierToutesCollisions, vaisseau, listeOvnis, listeMissiles, listeAsteroides, playerControl))
+        self.vaseau_PowerUp(vaisseau, listPU, playerControl)
+        verifierCollisionsTimer = Timer(0.2,partial(self.verfierToutesCollisions, vaisseau, listeOvnis, listeMissiles, listeAsteroides, listPU, playerControl))
         verifierCollisionsTimer.start()       
                         
                         
