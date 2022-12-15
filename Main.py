@@ -108,7 +108,6 @@ if __name__ == "__main__":
             # Deux lasers sont tirés lorsqu'on fait un click droit de la souris
             aireDeJeu.canva.bind('<Button-3>', partial(shoot.shootLaser, aireDeJeu, vaisseau))
 
-
             # creation ovnis
             spawns.createOvnis(menu.timerCreateOvnis, aireDeJeu)
 

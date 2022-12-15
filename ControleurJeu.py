@@ -488,11 +488,9 @@ class ControleurJeu(tk.Frame):
 
         #variables score/csv
         self.listScore = []
-        self.nbrTourBoucle = 0
         self.username = ''
 
-
-
+        self.gameOver = False
 
         #PARTIE POUR TIMER **-----------------------------------------------------------------------------------**    
     

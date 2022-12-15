@@ -15,6 +15,9 @@ class AireDeJeu:
         self.canva.create_image(10,10, image=self.imageBackground)
         self.canva.grid(column=1, row=1, padx=20) # pour centrer et donner un padding
         self.canva.config(cursor="none")
+        self.canva.configure(bg="black")
+        self.imageBackground = None
+        
 
 class Player:
     '''
