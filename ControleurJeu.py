@@ -565,16 +565,17 @@ class Verification():
     def verifHP(self, player, jeu):
         if player.hp <= 0:
             jeu.gameOver = True
-            print(jeu.gameOver)
+            print("game over is true")
         else:
             verifHpTimer = Timer(0.03, partial(self.verifHP, player, jeu))
             verifHpTimer.start()
         
 
-    def verifGameOver(self, jeu, aireDeJeu):
+    def verifGameOver(self, jeu, aireDeJeu, shoot, spawns):
         if jeu.gameOver == True:
             aireDeJeu.canva.configure(bg="black")
             aireDeJeu.imageBackground = None
+
         else:
-            verifGameOverTimer = Timer(0.03, partial(self.verifGameOver, jeu, aireDeJeu))
+            verifGameOverTimer = Timer(0.03, partial(self.verifGameOver, jeu, aireDeJeu, shoot, spawns))
             verifGameOverTimer.start()
