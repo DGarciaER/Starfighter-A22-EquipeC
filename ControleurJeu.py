@@ -73,7 +73,7 @@ class Mouvement(tk.Frame):
 
                 
                 # Si y >= 500, veut dire que l'ovni est en dehors de l'aire de jeu, donc on supprime
-                if ovn.y >= 500:
+                if ovn.y >= 600:
                     aireDeJeu.canva.delete(ovn.instanceOvni)
                     listeOvnis.remove(ovn)
         
@@ -110,7 +110,7 @@ class Mouvement(tk.Frame):
             aireDeJeu.canva.move(mine.instanceMine,0 ,vitesseMine)#deplacement de l'ovnis en x = 0, y = 2
             mine.y += vitesseMine
             
-            if mine.y >= 500:
+            if mine.y >= 600:
                 aireDeJeu.canva.delete(mine.instanceMine)
                 listeMine.remove(mine)
 
@@ -127,7 +127,7 @@ class Mouvement(tk.Frame):
 
             aireDeJeu.canva.move(pu.instancePU, 0,vitessePU)
                 
-            if pu.y >= 500:
+            if pu.y >= 600:
                 aireDeJeu.canva.delete(pu.instancePU)
                 listePU.remove(pu)
         
@@ -308,7 +308,7 @@ class Collision:
             if VT <= OB and VT >= OT or VY <= OB and VY >= OT or VB >= OT and VB <= OB:
                 if VR >= OL and VR <= OR or VL <= OR and VL >= OL or VX <= OR and VX >= OL:
                     playerControl.perte_hp()
-                    self.startExplosion(aireDeJeu, vaisseau.x, vaisseau.y)
+                    self.startExplosion(aireDeJeu, ovni.x, ovni.y)
                     listeOvnis.remove(ovni)
                     
     
@@ -432,13 +432,13 @@ class Collision:
         for mine in listeMine:
             
             ML = mine.x - 5                         #position gauche du pion
-            MR = mine.x + mine.imageMine.width()  #position droite du pion
-            MT = mine.y                           #position haut du pion
-            MB = mine.y + mine.imageMine.height() #position bas du pion
+            MR = mine.x + mine.imageMine.width()    #position droite du pion
+            MT = mine.y                             #position haut du pion
+            MB = mine.y + mine.imageMine.height()   #position bas du pion
 
             # la logique des collisions avec RB
             if VT <= MB and VT >= MT or VY <= MB and VY >= MT or VB >= MT and VB <= MB:
-                if VR >= ML and VR <= MR or VL <= MR and VL >= ML or VX <= MR and VX >= ML:
+                if VR - 2 >= ML and VR - 2 <= MR or VL - 4 <= MR and VL - 4 >= ML or VX <= MR and VX >= ML:
                     if player.hp <= 3:
                         player.hp = 0
                     else:
@@ -462,7 +462,9 @@ class Collision:
                     listeOvnis.remove(ovni)
 
     def startExplosion(self, aireDeJeu, x, y):
-        self.listExplosion.append(Explosion(aireDeJeu,x, y))
+        equivalenceX = 34
+        equivalenceY = 17
+        self.listExplosion.append(Explosion(aireDeJeu,x - equivalenceX, y - equivalenceY))
         print(len(self.listExplosion))
         aireDeJeu.canva.after(500, partial(self.deleteExplosion, aireDeJeu))
 
