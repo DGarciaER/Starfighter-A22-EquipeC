@@ -1,5 +1,6 @@
 import random
 from threading import Timer
+import time
 from ControleurMenu import ControleurMenu
 from ModeleJeu import Asteroide, Laser, Ovni, Missile, Mine, PowerUp
 from VueJeu import VueJeu
@@ -9,13 +10,18 @@ from functools import partial
 
 
 class Mouvement(tk.Frame):
+    '''
+    Classe mouvement, qui s'occupe de tout ce qui a un rapport avec un mouvement des objets du jeu (vaisseau, missile, ovnis, asteroides, etc)
+    Prend comme parametre un objet tkinter
+    '''
 
     def __init__(self):
-        self.imageV = tk.PhotoImage(file='Images/Vaisseau.png').subsample(12,12)
+        pass
 
 
-    """Methode qui permet le mouvement du vaisseau lorsque la souris se deplace"""
+    
     def moveVaisseau(self, vaisseau, aireDeJeu,e):
+        """Methode qui permet le mouvement du vaisseau lorsque la souris se deplace"""
 
         # Récupérer l'image de Vaisseau et reduire sa taille avec la méthode subsample
         self.imageV = tk.PhotoImage(file='Images/Vaisseau.png').subsample(12,12)
@@ -24,22 +30,27 @@ class Mouvement(tk.Frame):
         # Setter la position de vaiseau dans l'objet vaiseau
         vaisseau.setPositions(e.x,e.y)
 
-    """Methode qui permet le mouvement des missiles"""
+    
     def mouvMissiles(self, aireDeJeu, listeMissiles, timerMoveMissile):
+        """Methode qui permet le mouvement des missiles"""
 
+        #Boucle for each qui va passer dans la liste des missiles qui existent deja
         for missile in listeMissiles:
             aireDeJeu.canva.move(missile.instanceMissile, 0, -10)
             missile.y -=10
 
+            #Si le missile depasse la partie en haut de l'aire de jeu (y <= 0), supprimer le missile, pour eviter de se retrouver avec plein de missiles.
             if missile.y <= 0:
                 aireDeJeu.canva.delete(missile.instanceMissile)
                 listeMissiles.remove(missile)
-
+        
+        #Timer threads
         mouvMissileTimer = Timer(timerMoveMissile,partial(self.mouvMissiles,aireDeJeu, listeMissiles, timerMoveMissile))
         mouvMissileTimer.start()
 
-    """Methode qui permet le mouvement des ovnis"""
+    
     def moveOvnis(self, timerMoveOvnis, vitesseOvni, listeOvnis, aireDeJeu):
+        """Methode qui permet le mouvement des ovnis"""
         
         vitesseHorizontalDroite = 6
         vitesseHorizontalGauche = -6
@@ -47,10 +58,11 @@ class Mouvement(tk.Frame):
         for ovn in listeOvnis: # forEach qui passe dans toute la list listAsteroide
                 
                 ovn.y += vitesseOvni
-                if(ovn.x >= 400):
-                    ovn.direction = "left"
-                elif(ovn.x <= 5):
-                    ovn.direction = "right"
+                if(ovn.x >= 400):               # Si x >= 400, ca veut dire que l'ovni est a gauche de l'aire de jeu.
+                    ovn.direction = "left"      # On s'en sert en bas pour definir si il faut bouger l'ovni a gauche ou a droite
+
+                elif(ovn.x <= 5):               # Si x >= 400, ca veut dire que l'ovni est a gauche de l'aire de jeu.
+                    ovn.direction = "right"     # On s'en sert en bas pour definir si il faut bouger l'ovni a gauche ou a droite
 
                 if(ovn.direction == "right"):
                     aireDeJeu.canva.move(ovn.instanceOvni,vitesseHorizontalDroite ,vitesseOvni)#deplacement de l'ovnis en x = 0, y = 2
@@ -60,7 +72,7 @@ class Mouvement(tk.Frame):
                     ovn.x += vitesseHorizontalGauche
 
                 
-                
+                # Si y >= 500, veut dire que l'ovni est en dehors de l'aire de jeu, donc on supprime
                 if ovn.y >= 500:
                     aireDeJeu.canva.delete(ovn.instanceOvni)
                     listeOvnis.remove(ovn)
@@ -68,8 +80,9 @@ class Mouvement(tk.Frame):
         mouvOvniTimer = Timer(timerMoveOvnis, partial(self.moveOvnis, timerMoveOvnis, vitesseOvni, listeOvnis, aireDeJeu))
         mouvOvniTimer.start()
 
-    """Methode qui permet le mouvement des asteroides"""
+    
     def moveAsteroide(self,timerMoveAsteroide, listAsteroide, aireDeJeu):
+        """Methode qui permet le mouvement des asteroides"""
         
         for aste in listAsteroide: # forEach qui passe dans toute la list listAsteroide
 
@@ -104,8 +117,9 @@ class Mouvement(tk.Frame):
         mouvMineTimer = Timer(0.03, partial(self.mouvMines, listeMine, aireDeJeu))
         mouvMineTimer.start()
 
-    """Methode qui permet le mouvement des powerup"""
+    
     def movePowerUp(self, timerMovePU, vitessePU, listePU, aireDeJeu):
+        """Methode qui permet le mouvement des powerup"""
 
         for pu in listePU: # forEach qui passe dans toute la list listAsteroide
                 
@@ -124,6 +138,11 @@ class Mouvement(tk.Frame):
 
 
 class Shoot(tk.Frame):
+    '''
+    Cette classe s'occupe de tout ce qui a un rapport avec l'action de tirer 
+    (Le vaisseau tire un missile/laser(ET cooldown laser), les ovnis tirent une mine, etc)
+    '''
+
     def __init__(self):
         pass
 
@@ -167,6 +186,10 @@ class Shoot(tk.Frame):
 
 
 class PlayerControl:    # FIXME erreur de parametre quand on appelle perte_hp
+    '''
+    Cette classe s'occupe de controler les informations sur
+    Un utilisateur: augmenter son score, ses points de vie, etc.
+    '''
     def __init__(self, player):
         self.player = player
 
@@ -190,6 +213,10 @@ class PlayerControl:    # FIXME erreur de parametre quand on appelle perte_hp
 
 
 class Spawns(tk.Frame):
+
+    '''
+    Cette classe s'occupe de la generation des objets dans l'aire de jeu (Generation des ovnis, des asteroides ainsi que des bonus (Power Up))
+    '''
 
     def __init__(self):
         self.listeOvnis = []
@@ -246,7 +273,11 @@ class Spawns(tk.Frame):
 
 class Collision:
 
-    def vaseau_ennemie(self, vaisseau, listeOvnis, playerControl):
+    '''
+    Cette classe s'occupe des collisions entre les objets
+    '''
+
+    def vaisseau_ennemie(self, vaisseau, listeOvnis, playerControl): # Collision entre un vaisseau et un ovni
          
         equivalance = 31
          
@@ -271,7 +302,7 @@ class Collision:
                     playerControl.perte_hp()
                     
     
-    def missiles_ovnis(self, listeMissiles, listeOvnis, playerControl):
+    def missiles_ovnis(self, listeMissiles, listeOvnis, playerControl, ): # Collision entre un missile et un ovni
         
         equivalance = 0
         
@@ -295,13 +326,17 @@ class Collision:
                 if MT <= OB and MT >= OT or MY <= OB and MY >= OT or MB >= OT and MB <= OB:
                     if MR >= OL and MR <= OR or ML <= OR and ML >= OL or MX <= OR and MX >= OL:
                         playerControl.augmentation_score()
+                        # ovni.imageOvni = tk.PhotoImage(file='Images/explosion.png').subsample(4,4)
+                        # ovni.instanceOvni = container.canva.create_image(self.x,self.y,anchor=tk.NW,image=self.imageOvni)
+                        # time.sleep(2)
                         listeOvnis.remove(ovni)
                         listeMissiles.remove(missile)
+                        print("Collision missile-ovni")
                         # faire apparaitre explosion
 
 
                         
-    def vaisseau_asteroids(self, vaisseau, listeAsteroids, player):
+    def vaisseau_asteroids(self, vaisseau, listeAsteroids, player): #Collision entre le vaisseau de l'utilisateur et un asteroide
         equivalance = 0
 
         VY = vaisseau.y      #position Y milieu du carré rouge 
@@ -325,7 +360,7 @@ class Collision:
                     player.hp = 0   # se fait aussi avec un setter (meilleure pratique)
                     # faire apparaitre explosion
 
-    def vaseau_PowerUp(self, vaisseau, listPU, playerControl):
+    def vaisseau_PowerUp(self, vaisseau, listPU, playerControl): # Detecte collision entre le vaisseau et un bonus
         
         equivalance = 31
          
@@ -353,7 +388,7 @@ class Collision:
                         playerControl.augmentation_hp()
                     listPU.remove(pu)
 
-    def vaseau_mine(self, vaisseau, listeMine, player):
+    def vaisseau_mine(self, vaisseau, listeMine, player): # Detecte une collision entre un vaisseau et une mine
          
         equivalanceXR = 0
         equivalanceXL = 40
@@ -384,7 +419,7 @@ class Collision:
                     listeMine.remove(mine)
                     
 
-    def laser_ovnis(self, vaisseau, listLaser, listeOvnis, playerControl):
+    def laser_ovnis(self, vaisseau, listLaser, listeOvnis, playerControl): # Detecte une collision entre un laser et un ovni
         
         equivalance = 0
         
@@ -400,11 +435,11 @@ class Collision:
                     listeOvnis.remove(ovni)
 
     def verfierToutesCollisions(self, vaisseau, listeOvnis, listeMissiles, listeAsteroides, listeMine, listLaser , listPU, player, playerControl):
-        self.vaseau_ennemie(vaisseau,listeOvnis, playerControl)
+        self.vaisseau_ennemie(vaisseau,listeOvnis, playerControl)
         self.missiles_ovnis(listeMissiles,listeOvnis, playerControl)
         self.vaisseau_asteroids(vaisseau,listeAsteroides, player)
-        self.vaseau_PowerUp(vaisseau, listPU, playerControl)
-        self.vaseau_mine(vaisseau, listeMine, player)
+        self.vaisseau_PowerUp(vaisseau, listPU, playerControl)
+        self.vaisseau_mine(vaisseau, listeMine, player)
         self.laser_ovnis(vaisseau, listLaser, listeOvnis, playerControl)
         verifierCollisionsTimer = Timer(0.03,partial(self.verfierToutesCollisions, vaisseau, listeOvnis, listeMissiles, listeAsteroides, listeMine, listLaser, listPU, player, playerControl))
         verifierCollisionsTimer.start()       
@@ -412,6 +447,10 @@ class Collision:
                         
                         
 class ControleurJeu(tk.Frame):
+    '''
+    Cette classe s'occupe du chronometre dans le jeu
+    '''
+
     def __init__(self):
 
         self.update_time = ''

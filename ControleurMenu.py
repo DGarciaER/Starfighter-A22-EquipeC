@@ -6,7 +6,11 @@ import csv
 
 
 class ControleurMenu(tk.Frame):
-    def __init__(self):
+    '''
+    Cette classe permet de modifier les parametres du jeu (tel que la vitesse des ovnis, le nombre d'ovnis qui apparaissent par secondes, etc.) selon
+    la difficulté choisi par l'utilisateur, dans la methode afficherChoixLevel() de la classe Choix.
+    '''
+    def __init__(self): #Constructeur
         self.timerMoveMissile = 0.03
         self.timerMoveAsteroide = 0.03
         self.timerCreateAsteroide = 3
@@ -20,20 +24,26 @@ class ControleurMenu(tk.Frame):
 
     
     def niveau(self, level):
+        '''
+        Cette methode s'occupe de modifier les reglages du jeu en fonction de la difficulté choisi par l'utilisateur
+        '''
 
         # jeu.start_timer()
+
+        #Si le niveau de difficulte choisi est FACILE:
         if level.niveau == "facile":
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
-            self.timerCreateAsteroide = 5
-            self.timerCreateOvnis = 5
+            self.timerCreateAsteroide = 5       #Taux d'apparition des ovnis, 1 mine chaque x secondes
+            self.timerCreateOvnis = 5           #Taux d'apparition des ovnis, 1 mine chaque x secondes
             self.timerMoveOvnis = 0.03
             self.vitesseOvni = 2
-            self.timerShootMine = 5
-            self.timerCreatePU = 5
+            self.timerShootMine = 5             #Taux d'apparition des mines laissées par les ovnis, 1 mine chaque x secondes
+            self.timerCreatePU = 5              #Taux d'apparition des bonus (PowerUp), 1 bonus chaque x secondes
             self.timerMovePU = 0.03
-            self.vitessePU = 2
+            self.vitessePU = 2                  #Vitesse des bonus (PowerUp)
         
+        #Si le niveau de difficulte choisi est MOYEN:
         elif level.niveau == "moyen":
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
@@ -46,7 +56,7 @@ class ControleurMenu(tk.Frame):
             self.timerMovePU = 0.03
             self.vitessePU = 2
             
-
+        #Si le niveau de difficulte choisi est DIFFICILE:
         elif level.niveau == "difficile":
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
@@ -65,7 +75,7 @@ class Choix:
         pass
 
     def afficherChoixLevel(self,menu,level,enregistrer,jeu):
-    #creation de la fenetre
+        #creation de la fenetre pour le choix de la difficulté
         fenetreLevel = tk.Tk()
         fenetreLevel.title("Choix du niveau")
         fenetreLevel.geometry("300x300")
