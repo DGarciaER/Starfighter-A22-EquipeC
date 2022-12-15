@@ -18,7 +18,7 @@ if __name__ == "__main__":
     menu = ControleurMenu()
     level = Niveau()
     choix = Choix()
-    choix.afficherChoixLevel(menu, level, enregistrer, jeu)
+    choix.afficherChoixLevel(menu, level, jeu)
 
     print("hello")
 
@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
             # créer un containter et le centrer dans la fenetre tk
             mainContainer = tk.Frame(root, background= couleurTheme)
-            mainContainer.config(cursor="none")
+            # mainContainer.config(cursor="none")
             
             mainContainer.pack() # pour centrer et donner un padding
 
@@ -64,19 +64,23 @@ if __name__ == "__main__":
             buttonsContainer.grid(column=1, row=4, padx=10, pady=20) # pour centrer et donner un padding
             couleurButtons = "#E22866"
 
-                
-            #-----------------------------------------------------------------------------------------------------------------------------
-            # créer un button qui commence une nouvelle session et le mettre dans un grid en lui donnant du padding
-            buttonNouvSession = tk.Button(buttonsContainer, text="         Nouvelle session         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
-            buttonNouvSession.grid(column=1, row=1, padx=15)
+            # créer un player qui contient les scores et les vies
+            player = Player()
+
+            #---------------------------------------------------------------------------------------------------------------------------
+            buttonEnregistrer = tk.Button(buttonsContainer, text="  Enregistrer  ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'), command=partial(enregistrer.askUsername, player,jeu))
+            buttonEnregistrer.grid(column=1, row=1, padx=15)
 
             # créer un button qui affiche le menu score un nouveau jeu et le mettre dans un grid en lui donnant du padding
-            buttonMenuScores = tk.Button(buttonsContainer, text="         Scores         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
+            buttonMenuScores = tk.Button(buttonsContainer, text="  Scores  ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'), command=partial(enregistrer.AfficherScores))
             buttonMenuScores.grid(column=2, row=1, padx=15)
 
+            buttonEnregistrer = tk.Button(buttonsContainer, text="  Recommencer  ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'), command=None)
+            buttonEnregistrer.grid(column=3, row=1, padx=15)
+
             # créer un button quitte du programme et le mettre dans un grid en lui donnant du padding
-            buttonQuitter = tk.Button(buttonsContainer, text="         Quitter         ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'))
-            buttonQuitter.grid(column=3, row=1, padx=15)
+            buttonQuitter = tk.Button(buttonsContainer, text="  Quitter  ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'), command=root.destroy)
+            buttonQuitter.grid(column=4, row=1, padx=15)
 
             #-------------------------------------------------------------------------------------------------------------------------------
             
@@ -86,8 +90,7 @@ if __name__ == "__main__":
             jeu.create_widget(statsContainer) #HUD
             jeu.startTimer() #Timer, commence en mem
 
-            # créer un player qui contient les scores et les vies
-            player = Player()
+
             # controler le player
             playerControl = PlayerControl(player)
             verif = Verification()
@@ -133,7 +136,7 @@ if __name__ == "__main__":
             mvmt.mouvMines(shoot.listMine, aireDeJeu)
                 
             # verifier les collision entre tout les objets du jeu
-            collision.verfierToutesCollisions(vaisseau,spawns.listeOvnis, shoot.listeMissiles ,spawns.listAsteroides, shoot.listMine, shoot.listLaser ,spawns.listPU, menu.difficulte, player, playerControl, aireDeJeu)    #TODO ajouter collision avec powerup
+            collision.verfierToutesCollisions(vaisseau,spawns.listeOvnis, shoot.listeMissiles ,spawns.listAsteroides, shoot.listMine, shoot.listLaser ,spawns.listPU, level.niveau, player, playerControl, aireDeJeu)    #TODO ajouter collision avec powerup
 
             # faire raffraichir les stats du player tout a long du jeu
             playerControl.updatePlayer(scoreLabel, hpLabel)
@@ -142,7 +145,7 @@ if __name__ == "__main__":
 
             # boocler la fenetre tk
             verif.verifHP(player, jeu)
-            verif.verifGameOver(jeu, aireDeJeu, shoot, spawns)
+            verif.verifGameOver(jeu, aireDeJeu)
             root.mainloop()
 
             

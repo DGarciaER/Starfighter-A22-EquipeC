@@ -4,6 +4,9 @@ from functools import partial
 from tkinter import simpledialog
 import csv
 
+from ModeleJeu import Player
+
+
 
 class ControleurMenu(tk.Frame):
     '''
@@ -34,11 +37,10 @@ class ControleurMenu(tk.Frame):
 
         #Si le niveau de difficulte choisi est FACILE:
         if level.niveau == "facile":
-            self.difficulte = "facile"
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
             self.timerCreateAsteroide = 1       #Taux d'apparition des ovnis, 1 mine chaque x secondes
-            self.timerCreateOvnis = 10          #Taux d'apparition des ovnis, 1 mine chaque x secondes
+            self.timerCreateOvnis = 10           #Taux d'apparition des ovnis, 1 mine chaque x secondes
             self.timerMoveOvnis = 0.03
             self.vitesseOvniY = 2
             self.vitesseOvniX = 6
@@ -51,7 +53,6 @@ class ControleurMenu(tk.Frame):
         
         #Si le niveau de difficulte choisi est MOYEN:
         elif level.niveau == "moyen":
-            self.difficulte = "moyen"
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
             self.timerCreateAsteroide = 3
@@ -68,7 +69,6 @@ class ControleurMenu(tk.Frame):
             
         #Si le niveau de difficulte choisi est DIFFICILE:
         elif level.niveau == "difficile":
-            self.difficulte = "difficile"
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
             self.timerCreateAsteroide = 1
@@ -90,30 +90,31 @@ class Choix:
     def __init__(self):
         pass
 
-    def afficherChoixLevel(self,menu,level,enregistrer,jeu):
+    def afficherChoixLevel(self,menu,level,jeu):#enregistrer
         #creation de la fenetre pour le choix de la difficulté
+        couleurTheme = "#41157A"
         fenetreLevel = tk.Tk()
         fenetreLevel.title("Choix du niveau")
         fenetreLevel.geometry("300x300")
-        buttonsContainerAlignement = tk.Canvas(fenetreLevel, highlightthickness=0)
+        buttonsContainerAlignement = tk.Canvas(fenetreLevel, highlightthickness=0,background=couleurTheme)
         buttonsContainerAlignement.pack() # pour centrer et donner un padding
-        buttonEasyLevel = Button(buttonsContainerAlignement, text="Facile", command=level.level_facile)
-        buttonMediumLevel = Button(buttonsContainerAlignement, text="Moyen", command=level.level_moyen)
-        buttonHardLevel = Button(buttonsContainerAlignement, text="Difficile", command=level.level_difficile)
-        buttonCommencer = Button(buttonsContainerAlignement, text="Commencer", command=partial(menu.niveau, level, fenetreLevel))
-        buttonEnregistrer = Button(buttonsContainerAlignement, text="Enregistrer", command=partial(enregistrer.askUsername))
+        buttonEasyLevel = Button(buttonsContainerAlignement, text="Facile", command=level.level_facile, background='#FFFC33')
+        buttonMediumLevel = Button(buttonsContainerAlignement, text="Moyen", command=level.level_moyen, background='#FFFC33')
+        buttonHardLevel = Button(buttonsContainerAlignement, text="Difficile", command=level.level_difficile, background='#FFFC33')
+        buttonCommencer = Button(buttonsContainerAlignement, text="Commencer", command=partial(menu.niveau, level, fenetreLevel), background='#FFFC33')
+        #buttonEnregistrer = Button(buttonsContainerAlignement, text="Enregistrer", command=partial(enregistrer.askUsername))
         buttonCommencer.grid(column=1, row=4,padx=15, pady=10)
         buttonEasyLevel.grid(column=1, row=1,padx=15, pady=10)
         buttonMediumLevel.grid(column=1, row=2, padx=15, pady=10)
         buttonHardLevel.grid(column=1, row=3, padx=15, pady=10)
-        buttonEnregistrer.grid(column=2, row=2, padx=15)
+        #buttonEnregistrer.grid(column=2, row=2, padx=15)
         fenetreLevel.mainloop()
 
 class Enregistrer:
     def __init__(self):
         self.username = ""
 
-    def openCSV(self, score, username):
+    def openCSV(self, nom, score,jeu):
         '''Fonction pour enregistrer les noms d'utilisateurs ainsi que leurs scores pour la session
 
         :param score: le score de la partie (format 00:00:00) enregistre dans une liste a chauque partie fini, et le sauvegarde dans le fichier csv que quand l'utilisateur rentre son nom (ou non)
@@ -121,9 +122,14 @@ class Enregistrer:
         :param username: le nom d'utilisateur insire dans avec le boutton "Quitter" ou "Nouvelle score"
         :type username: string
         '''
+        nom = nom[:-1]
         f = open('score.csv', 'a', newline='')
+        temps = "Temps : "+ jeu.minutes_string + ":" + jeu.seconds_string + ":" + jeu.milliseconds_string 
+        nomT = "Nom : " + nom
+        scoreT = "Score : " + str(score)
         writer = csv.writer(f)
-        writer.writerow([username, score])
+        
+        writer.writerow([nomT, scoreT, temps])
         f.close()
 
     def setUsername(self, x):
@@ -139,7 +145,7 @@ class Enregistrer:
             self.username = x
 
 
-    def askUsername(self):
+    def askUsername(self,player,jeu):
         """Fonction pour demander le nom de lutilisateur. Cette fonctione est appelle lorsque lutilisateur clique sur nouvelle session ou quitter"""
         #simpledialog demande le nom a lutilisateur
         self.setUsername(simpledialog.askstring("Save", "Entrer votre nom pour enregistrer"))
@@ -150,9 +156,62 @@ class Enregistrer:
         #     jeu.listScore = []
         if len(self.username) > 0:
             #ecrire dans le ficheier
-            self.openCSV(3,self.username)
+            self.openCSV(self.username,player.score,jeu)#recuper timer, scores
         # else:
         #     if len(jeu.listScore) != 0:
 
         #         jeu.openCSV(jeu.listScore, jeu.username)
         #         jeu.listScore = []
+
+
+    #
+    def deleteScore(self):
+        """Fonction pour supprimer les scores """
+        
+        f = open("score.csv", "w")
+        f.truncate()
+        f.close()
+
+    #Afficher les scores:
+    def AfficherScores(self):
+        """Fonction pour afficher les scores """
+        
+        #creation du widget
+        couleurTheme = "#41157A"
+        self.fenetreScore = tk.Tk()
+        self.fenetreScore.config(background= couleurTheme)
+        self.fenetreScore.title("Scores")
+        self.fenetreScore.geometry("400x400")
+        buttonsContainerAlignement = tk.Canvas(self.fenetreScore, highlightthickness=0, background='#FFFC33')
+        buttonsContainerAlignement.pack() # pour centrer et donner un padding
+        scoresLabel = Label(buttonsContainerAlignement, text="LES SCORES :",background='#FFFC33')
+        scoresLabel.grid(column=1,row=1,padx=15)
+        buttonExit = Button(buttonsContainerAlignement, text="Retour",command=self.fenetreScore.destroy, background='#FFFC33')
+        buttonSuppimer = Button(buttonsContainerAlignement, text="Supprimer scores",command= self.deleteScore,background='#FFFC33')
+        buttonExit.grid(column=2, row=1,padx=15)
+        buttonSuppimer.grid(column=3, row=1, padx=15)
+        scrollbar = Scrollbar(self.fenetreScore)
+        scrollbar.pack( side = RIGHT, fill = Y )
+        canvascore = Listbox(self.fenetreScore, yscrollcommand = scrollbar.set )
+        
+        
+
+        canvascore.pack( fill = BOTH, padx= 50, expand=True )
+        scrollbar.config( command = canvascore.yview )
+
+        
+        
+        scores = []  # creation du tableau scores   
+
+        #ouverture du fichier CSV
+        with open("score.csv",'r') as r:
+            obj = csv.reader(r, delimiter="\n")
+            for i in obj:
+                ligne = i
+                scores.append(ligne)
+            print(scores)
+        r.close()
+        
+        
+        for i in scores:
+            canvascore.insert(END, i)

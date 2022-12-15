@@ -596,6 +596,6 @@ class Verification():
             aireDeJeu.imageBackground = None
 
         else:
-            verifGameOverTimer = Timer(0.03, partial(self.verifGameOver, jeu, aireDeJeu, shoot, spawns))
+            verifGameOverTimer = Timer(0.03, partial(self.verifGameOver, jeu, aireDeJeu))
             verifGameOverTimer.start()
             
