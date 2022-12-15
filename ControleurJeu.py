@@ -558,3 +558,23 @@ class ControleurJeu(tk.Frame):
             self.stopwatch_label.config(text='Timer:  ' + self.minutes_string + ':' + self.seconds_string + ':' + self.milliseconds_string)
             self.update_time = self.stopwatch_label.after(10, self.updateTimer) #Variabe update_time, appelé dans pauseTimer() et resetTimer() avec .after_cancel
 
+class Verification():
+    def __init__(self):
+        pass
+
+    def verifHP(self, player, jeu):
+        if player.hp <= 0:
+            jeu.gameOver = True
+            print(jeu.gameOver)
+        else:
+            verifHpTimer = Timer(0.03, partial(self.verifHP, player, jeu))
+            verifHpTimer.start()
+        
+
+    def verifGameOver(self, jeu, aireDeJeu):
+        if jeu.gameOver == True:
+            aireDeJeu.canva.configure(bg="black")
+            aireDeJeu.imageBackground = None
+        else:
+            verifGameOverTimer = Timer(0.03, partial(self.verifGameOver, jeu, aireDeJeu))
+            verifGameOverTimer.start()

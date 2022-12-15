@@ -1,6 +1,6 @@
 import tkinter as tk
 from functools import partial
-from ControleurJeu import Collision, Mouvement, PlayerControl, Shoot, Spawns, ControleurJeu
+from ControleurJeu import Collision, Mouvement, PlayerControl, Shoot, Spawns, ControleurJeu, Verification
 from ControleurMenu import ControleurMenu, Choix, Enregistrer
 from ModeleJeu import AireDeJeu, Player, Vaiseau
 from ModeleMenu import Niveau
@@ -90,7 +90,7 @@ if __name__ == "__main__":
             player = Player()
             # controler le player
             playerControl = PlayerControl(player)
-
+            verif = Verification()
             vaisseau = Vaiseau(aireDeJeu)
             spawns = Spawns()
             mvmt = Mouvement()
@@ -143,6 +143,8 @@ if __name__ == "__main__":
             # boocler la fenetre tk
             print("hello")
             root.mainloop()
+            verif.verifHP(player, jeu)
+            verif.verifGameOver(jeu, aireDeJeu)
             
         else:
             commencerJeuTimer = Timer(0.03, commencerJeu)
