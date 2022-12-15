@@ -447,10 +447,11 @@ class Collision:
                     listeMine.remove(mine)
                     
 
-    def laser_ovnis(self, vaisseau, listLaser, listeOvnis, playerControl, aireDeJeu): # Detecte une collision entre un laser et un ovni
+    def laser_ovnis(self, vaisseau, listLaser, listeOvnis, playerControl, aireDeJeu):
+        '''Detecte une collision entre un laser et un ovni'''
         
-        for laser in listLaser:
-            for ovni in listeOvnis:
+        for laser in listLaser:         # On passe a travers tout les lasers
+            for ovni in listeOvnis:     # On passe a travers tout les ovnis
                 if laser.x >= ovni.x and laser.x <= ovni.x + ovni.imageOvni.width() and vaisseau.y >= ovni.y:
                     print("x du laser")
                     print(laser.x)
@@ -462,6 +463,9 @@ class Collision:
                     listeOvnis.remove(ovni)
 
     def startExplosion(self, aireDeJeu, x, y):
+        '''
+        Methode qui s'occupe de creer une image d'explosion. Est appele lorsqu'il y a une collision
+        '''
         equivalenceX = 34
         equivalenceY = 17
         self.listExplosion.append(Explosion(aireDeJeu,x - equivalenceX, y - equivalenceY))
@@ -469,16 +473,23 @@ class Collision:
         aireDeJeu.canva.after(500, partial(self.deleteExplosion, aireDeJeu))
 
     def deleteExplosion(self, aireDeJeu):
+        '''
+        Methode qui est appelle lorsqu'il y a une explosion, on la supprime apres.
+        '''
         aireDeJeu.canva.delete(self.listExplosion[0].imageExplosion)
         del self.listExplosion[0]
 
     def verfierToutesCollisions(self, vaisseau, listeOvnis, listeMissiles, listeAsteroides, listeMine, listLaser , listPU, difficulte, player, playerControl, aireDeJeu):
+        '''
+        Fonction qui verifie constamment toutes les collisions chaque 0.03. Appel de toutes les fonctions collisions
+        '''
         self.vaisseau_ennemie(vaisseau,listeOvnis, playerControl, aireDeJeu)
         self.missiles_ovnis(listeMissiles,listeOvnis, playerControl, aireDeJeu)
         self.vaisseau_asteroids(vaisseau,listeAsteroides, difficulte, player, aireDeJeu)
         self.vaisseau_PowerUp(vaisseau, listPU, playerControl)
         self.vaisseau_mine(vaisseau, listeMine, player, aireDeJeu)
         self.laser_ovnis(vaisseau, listLaser, listeOvnis, playerControl, aireDeJeu)
+
         verifierCollisionsTimer = Timer(0.03,partial(self.verfierToutesCollisions, vaisseau, listeOvnis, listeMissiles, listeAsteroides, listeMine, listLaser, listPU, difficulte, player, playerControl, aireDeJeu))
         verifierCollisionsTimer.start()       
                         
@@ -509,10 +520,7 @@ class ControleurJeu(tk.Frame):
         self.username = ''
 
         self.gameOver = False
-
-        #PARTIE POUR TIMER **-----------------------------------------------------------------------------------**    
-    
-    
+        
     def create_widget(self, container):
         '''Fonction pour créer le label du timer'''
         self.stopwatch_label = tk.Label(container, text='Timer:  00:00:00', fg='#FFFD85',background= "#41157A")
@@ -540,7 +548,9 @@ class ControleurJeu(tk.Frame):
         self.stopwatch_label.config(text='00:00:00')
 
     def updateTimer(self):
-        '''Cette fonction s'occupe de mettre a jour les valeurs (millisecondes, secondes et minutes) et les valeurs_string(Pour affichage et sauvegarder les scores)'''
+        '''Cette fonction s'occupe de mettre a jour les valeurs
+        (millisecondes, secondes et minutes) et les valeurs_string(Pour affichage et sauvegarder les scores)
+        '''
 
         #Conditions pour update les valeurs
         if self.running:                                            # SI le timer est en marche,
@@ -551,6 +561,7 @@ class ControleurJeu(tk.Frame):
             if self.seconds == 60:                                  # SI les secondes arrivent à 60,
                 self.minutes += 1                                   # Alors +1 minute
                 self.seconds = 0                                    # Et on remet les secondes à 0
+
             #On transforme les ints en string
             self.minutes_string = f'{self.minutes}' if self.minutes > 9 else f'0{self.minutes}'
             self.seconds_string = f'{self.seconds}' if self.seconds > 9 else f'0{self.seconds}'
@@ -559,19 +570,27 @@ class ControleurJeu(tk.Frame):
             self.update_time = self.stopwatch_label.after(10, self.updateTimer) #Variabe update_time, appelé dans pauseTimer() et resetTimer() avec .after_cancel
 
 class Verification():
+    '''
+    Cette classe s'occupe de verifier les informations de l'utilisateur
+    '''
+
     def __init__(self):
         pass
 
     def verifHP(self, player, jeu):
-        if player.hp <= 0:
-            jeu.gameOver = True
-            print("game over is true")
+        '''
+        Methode qui s'occupe de verifier les points de vies.
+        '''
+        if player.hp <= 0:          # Si les points de vie de l'utilisateur est <= 0.
+            jeu.gameOver = True     # la partie est fini
+            print(jeu.gameOver)
         else:
+            #Thread pour appeler la methode chaque 0.03 secondes
             verifHpTimer = Timer(0.03, partial(self.verifHP, player, jeu))
             verifHpTimer.start()
         
 
-    def verifGameOver(self, jeu, aireDeJeu, shoot, spawns):
+    def verifGameOver(self, jeu, aireDeJeu):
         if jeu.gameOver == True:
             aireDeJeu.canva.configure(bg="black")
             aireDeJeu.imageBackground = None
@@ -579,3 +598,4 @@ class Verification():
         else:
             verifGameOverTimer = Timer(0.03, partial(self.verifGameOver, jeu, aireDeJeu, shoot, spawns))
             verifGameOverTimer.start()
+            
