@@ -71,11 +71,8 @@ class Laser:
     Parameters: Le container tkinter (AirDeJeu) et les coordonnes du laser
     """
     def __init__(self,container, xCoinGaucheHaut, yCoinGaucheHaut, xCoinDroitBas, yCoinDroitBas, ):
-        # self.y = y
         self.rectangleLaser = container.canva.create_rectangle(xCoinGaucheHaut, yCoinGaucheHaut, xCoinDroitBas, yCoinDroitBas, fill="red")
         self.x = xCoinGaucheHaut + ((xCoinDroitBas - xCoinGaucheHaut)/2) # x c'est la moitie du width du laser
-        # self.imageMissile = tk.PhotoImage(file='Images/missile.png').subsample(3,3)
-        # self.instanceMissile = container.canva.create_image(self.x, self.y, image=self.imageMissile)
 
 class Ovni:
     '''
@@ -98,12 +95,10 @@ class Asteroide:
         self.y = y
         self.direction = direction
         if self.direction == "bas-droit":
-            self.imageAsteroide = tk.PhotoImage(file='Images/asteroide.gif').subsample(4,4) #Creation de l'image Asteroide
+            self.imageAsteroide = tk.PhotoImage(file='Images/asteroide.gif').subsample(4,4)                             #Creation de l'image Asteroide
         else:
-            self.imageAsteroide = tk.PhotoImage(file='Images/asteroideFlipped.png').subsample(4,4) #Creation de l'image Asteroide
-
-        
-        self.instanceAsteroide = container.canva.create_image(self.x, self.y, anchor=tk.NW,image=self.imageAsteroide) #Placer l'image dans le container
+            self.imageAsteroide = tk.PhotoImage(file='Images/asteroideFlipped.png').subsample(4,4)                      #Creation de l'image Asteroide
+        self.instanceAsteroide = container.canva.create_image(self.x, self.y, anchor=tk.NW,image=self.imageAsteroide)   #Placer l'image dans le container
         
 
 class PowerUp:

@@ -4,7 +4,6 @@ from ControleurJeu import Collision, Mouvement, PlayerControl, Shoot, Spawns, Co
 from ControleurMenu import ControleurMenu, Choix, Enregistrer
 from ModeleJeu import AireDeJeu, Player, Vaiseau
 from ModeleMenu import Niveau
-from VueJeu import VueJeu
 from threading import Timer
 
 
@@ -30,15 +29,12 @@ if __name__ == "__main__":
             
             #creation fenetre root
             root = tk.Tk()
-            # root.config(cursor="none")
             root.title("Star Fighter")
             root.config(background= couleurTheme)
             root.geometry("510x680")
 
             # créer un containter et le centrer dans la fenetre tk
             mainContainer = tk.Frame(root, background= couleurTheme)
-            # mainContainer.config(cursor="none")
-            
             mainContainer.pack() # pour centrer et donner un padding
 
 

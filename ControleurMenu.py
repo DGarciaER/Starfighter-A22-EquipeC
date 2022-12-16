@@ -17,15 +17,15 @@ class ControleurMenu(tk.Frame):
         self.commence = False
         self.timerMoveMissile = 0.03
         self.timerMoveAsteroide = 0.03
-        self.timerCreateAsteroide = 3
-        self.timerCreateOvnis = 3
+        self.timerCreateAsteroide = 3   #Taux d'apparition des ovnis, 1 mine chaque x secondes
+        self.timerCreateOvnis = 3       #Taux d'apparition des ovnis, 1 mine chaque x secondes
         self.timerMoveOvnis = 0.03
         self.vitesseOvniY = 0
         self.vitesseOvniX = 0
-        self.timerShootMine = 2
-        self.timerCreatePU = 5
+        self.timerShootMine = 2         #Taux d'apparition des mines laissées par les ovnis, 1 mine chaque x secondes
+        self.timerCreatePU = 5          #Taux d'apparition des bonus (PowerUp), 1 bonus chaque x secondes
         self.timerMovePU = 0.03
-        self.vitessePU = 2
+        self.vitessePU = 2              #Vitesse des bonus (PowerUp)
 
     
     def niveau(self, level, fenetreLevel):
@@ -33,21 +33,19 @@ class ControleurMenu(tk.Frame):
         Cette methode s'occupe de modifier les reglages du jeu en fonction de la difficulté choisi par l'utilisateur
         '''
 
-        # jeu.start_timer()
-
         #Si le niveau de difficulte choisi est FACILE:
         if level.niveau == "facile":
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
-            self.timerCreateAsteroide = 1       #Taux d'apparition des ovnis, 1 mine chaque x secondes
-            self.timerCreateOvnis = 10           #Taux d'apparition des ovnis, 1 mine chaque x secondes
+            self.timerCreateAsteroide = 1       
+            self.timerCreateOvnis = 5           
             self.timerMoveOvnis = 0.03
             self.vitesseOvniY = 2
             self.vitesseOvniX = 6
-            self.timerShootMine = 5             #Taux d'apparition des mines laissées par les ovnis, 1 mine chaque x secondes
-            self.timerCreatePU = 5              #Taux d'apparition des bonus (PowerUp), 1 bonus chaque x secondes
+            self.timerShootMine = 4             
+            self.timerCreatePU = 5              
             self.timerMovePU = 0.03
-            self.vitessePU = 2                  #Vitesse des bonus (PowerUp)
+            self.vitessePU = 2                  
             self.commence = True
             fenetreLevel.destroy()
         
@@ -56,11 +54,11 @@ class ControleurMenu(tk.Frame):
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
             self.timerCreateAsteroide = 3
-            self.timerCreateOvnis = 3
+            self.timerCreateOvnis = 2
             self.timerMoveOvnis = 0.03
             self.vitesseOvniY = 5
             self.vitesseOvniX = 8
-            self.timerShootMine = 3
+            self.timerShootMine = 2.5
             self.timerCreatePU = 5
             self.timerMovePU = 0.03
             self.vitessePU = 2
@@ -72,11 +70,11 @@ class ControleurMenu(tk.Frame):
             self.timerMoveMissile = 0.03
             self.timerMoveAsteroide = 0.03
             self.timerCreateAsteroide = 1
-            self.timerCreateOvnis = 0.5
+            self.timerCreateOvnis = 1
             self.timerMoveOvnis = 0.03
             self.vitesseOvniY = 10
             self.vitesseOvniX = 12
-            self.timerShootMine = 4
+            self.timerShootMine = 1.5
             self.timerCreatePU = 5
             self.timerMovePU = 0.03
             self.vitessePU = 2
@@ -87,6 +85,9 @@ class ControleurMenu(tk.Frame):
         
 
 class Choix:
+    '''
+    Cette classe s'occupe de proposer les differents choix de difficultés du jeu à l'utilisateur. 
+    '''
     def __init__(self):
         pass
 
@@ -102,15 +103,14 @@ class Choix:
         buttonMediumLevel = Button(buttonsContainerAlignement, text="Moyen", command=level.level_moyen, background='#FFFC33')
         buttonHardLevel = Button(buttonsContainerAlignement, text="Difficile", command=level.level_difficile, background='#FFFC33')
         buttonCommencer = Button(buttonsContainerAlignement, text="Commencer", command=partial(menu.niveau, level, fenetreLevel), background='#FFFC33')
-        #buttonEnregistrer = Button(buttonsContainerAlignement, text="Enregistrer", command=partial(enregistrer.askUsername))
         buttonCommencer.grid(column=1, row=4,padx=15, pady=10)
         buttonEasyLevel.grid(column=1, row=1,padx=15, pady=10)
         buttonMediumLevel.grid(column=1, row=2, padx=15, pady=10)
         buttonHardLevel.grid(column=1, row=3, padx=15, pady=10)
-        #buttonEnregistrer.grid(column=2, row=2, padx=15)
         fenetreLevel.mainloop()
 
 class Enregistrer:
+
     def __init__(self):
         self.username = ""
 
@@ -124,7 +124,7 @@ class Enregistrer:
         '''
         nom = nom[:-1]
         f = open('score.csv', 'a', newline='')
-        temps = "Temps : "+ jeu.minutes_string + ":" + jeu.seconds_string + ":" + jeu.milliseconds_string 
+        temps = "Temps : "+ jeu.minutes_string + ":" + jeu.seconds_string + ":" + jeu.milliseconds_string # Variable utilisé pour sauvegarder le temps de l'utilisateur dans le fichier csv
         nomT = "Nom : " + nom
         scoreT = "Score : " + str(score)
         writer = csv.writer(f)
@@ -152,16 +152,9 @@ class Enregistrer:
         #si il clique sur annuler, rien ne se passe
         if self.username == None:
             pass
-        # elif jeu.username == "\n":
-        #     jeu.listScore = []
         if len(self.username) > 0:
             #ecrire dans le ficheier
             self.openCSV(self.username,player.score,jeu)#recuper timer, scores
-        # else:
-        #     if len(jeu.listScore) != 0:
-
-        #         jeu.openCSV(jeu.listScore, jeu.username)
-        #         jeu.listScore = []
 
 
     #
@@ -172,16 +165,15 @@ class Enregistrer:
         f.truncate()
         f.close()
 
-    #Afficher les scores:
     def AfficherScores(self):
-        """Fonction pour afficher les scores """
+        """Fonction pour afficher les scores, fonction appelé lorsqu'on click sur le boutton SCORE"""
         
         #creation du widget
         couleurTheme = "#41157A"
         self.fenetreScore = tk.Tk()
         self.fenetreScore.config(background= couleurTheme)
         self.fenetreScore.title("Scores")
-        self.fenetreScore.geometry("400x400")
+        self.fenetreScore.geometry("400x400") # Dimensions
         buttonsContainerAlignement = tk.Canvas(self.fenetreScore, highlightthickness=0, background='#FFFC33')
         buttonsContainerAlignement.pack() # pour centrer et donner un padding
         scoresLabel = Label(buttonsContainerAlignement, text="LES SCORES :",background='#FFFC33')
@@ -199,8 +191,6 @@ class Enregistrer:
         canvascore.pack( fill = BOTH, padx= 50, expand=True )
         scrollbar.config( command = canvascore.yview )
 
-        
-        
         scores = []  # creation du tableau scores   
 
         #ouverture du fichier CSV
@@ -212,6 +202,6 @@ class Enregistrer:
             print(scores)
         r.close()
         
-        
+        #On passe à travers tout les scores
         for i in scores:
             canvascore.insert(END, i)

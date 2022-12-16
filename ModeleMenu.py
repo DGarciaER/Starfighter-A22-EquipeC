@@ -1,8 +1,7 @@
 class Niveau:
+    '''Classe pour definir le niveau de difficulté du jeu'''
     def __init__(self):
         self.niveau = "none"
-
-    """methode pour definir le niveau facile du jeu"""
     
     def level_facile(self):
         self.niveau = "facile"
