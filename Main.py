@@ -68,19 +68,16 @@ if __name__ == "__main__":
             player = Player()
 
             #---------------------------------------------------------------------------------------------------------------------------
-            buttonEnregistrer = tk.Button(buttonsContainer, text="  Enregistrer  ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'), command=partial(enregistrer.askUsername, player,jeu))
+            buttonEnregistrer = tk.Button(buttonsContainer, text="    Enregistrer    ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'), command=partial(enregistrer.askUsername, player,jeu))
             buttonEnregistrer.grid(column=1, row=1, padx=15)
 
             # créer un button qui affiche le menu score un nouveau jeu et le mettre dans un grid en lui donnant du padding
-            buttonMenuScores = tk.Button(buttonsContainer, text="  Scores  ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'), command=partial(enregistrer.AfficherScores))
+            buttonMenuScores = tk.Button(buttonsContainer, text="    Scores    ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'), command=partial(enregistrer.AfficherScores))
             buttonMenuScores.grid(column=2, row=1, padx=15)
 
-            buttonEnregistrer = tk.Button(buttonsContainer, text="  Recommencer  ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'), command=None)
-            buttonEnregistrer.grid(column=3, row=1, padx=15)
-
             # créer un button quitte du programme et le mettre dans un grid en lui donnant du padding
-            buttonQuitter = tk.Button(buttonsContainer, text="  Quitter  ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'), command=root.destroy)
-            buttonQuitter.grid(column=4, row=1, padx=15)
+            buttonQuitter = tk.Button(buttonsContainer, text="    Quitter    ", background= couleurButtons, fg='#FFFED6', font=('arial', 9, 'bold'), command=root.destroy)
+            buttonQuitter.grid(column=3, row=1, padx=15)
 
             #-------------------------------------------------------------------------------------------------------------------------------
             
@@ -101,39 +98,39 @@ if __name__ == "__main__":
             collision = Collision()
 
             # Le vaisseau se deplace en suivant la position de la souris
-            aireDeJeu.canva.bind('<Motion>', partial(mvmt.moveVaisseau, vaisseau, aireDeJeu))
+            aireDeJeu.canva.bind('<Motion>', partial(mvmt.moveVaisseau, vaisseau, aireDeJeu, jeu))
 
             # # Un missile est tiré lorsqu'on fait un click gauche de la souris
             aireDeJeu.canva.bind('<Button-1>', partial(shoot.shootMissile, aireDeJeu, vaisseau))
             # On bouge le missile vers le haut
-            mvmt.mouvMissiles(aireDeJeu, shoot.listeMissiles, menu.timerMoveMissile)
+            mvmt.mouvMissiles(aireDeJeu, shoot.listeMissiles, menu.timerMoveMissile, jeu)
 
             # Deux lasers sont tirés lorsqu'on fait un click droit de la souris
             aireDeJeu.canva.bind('<Button-3>', partial(shoot.shootLaser, aireDeJeu, vaisseau))
 
             # creation ovnis
-            spawns.createOvnis(menu.timerCreateOvnis, aireDeJeu)
+            spawns.createOvnis(menu.timerCreateOvnis, aireDeJeu, jeu)
 
             # creation astroides
-            spawns.createAsteroide(menu.timerCreateAsteroide, aireDeJeu)
+            spawns.createAsteroide(menu.timerCreateAsteroide, aireDeJeu, jeu)
 
             # creation powerup
-            spawns.createPU(menu.timerCreatePU, aireDeJeu)
+            spawns.createPU(menu.timerCreatePU, aireDeJeu, jeu)
 
             # mouvement des ovnis
-            mvmt.moveOvnis(menu.timerMoveOvnis, menu.vitesseOvniY, menu.vitesseOvniX, spawns.listeOvnis, aireDeJeu)
+            mvmt.moveOvnis(menu.timerMoveOvnis, menu.vitesseOvniY, menu.vitesseOvniX, spawns.listeOvnis, aireDeJeu, jeu)
 
             # mouvement des astroides
-            mvmt.moveAsteroide(menu.timerMoveAsteroide, spawns.listAsteroides, aireDeJeu)
+            mvmt.moveAsteroide(menu.timerMoveAsteroide, spawns.listAsteroides, aireDeJeu, jeu)
 
             # mouvement des powerup
-            mvmt.movePowerUp(menu.timerMovePU, menu.vitessePU, spawns.listPU, aireDeJeu)
+            mvmt.movePowerUp(menu.timerMovePU, menu.vitessePU, spawns.listPU, aireDeJeu, jeu)
 
             # shoot mines des ovnis
-            shoot.shootMine(menu.timerShootMine, spawns.listeOvnis, aireDeJeu)
+            shoot.shootMine(menu.timerShootMine, spawns.listeOvnis, aireDeJeu, jeu)
 
             # mouvement de mines
-            mvmt.mouvMines(shoot.listMine, aireDeJeu)
+            mvmt.mouvMines(shoot.listMine, aireDeJeu, jeu)
                 
             # verifier les collision entre tout les objets du jeu
             collision.verfierToutesCollisions(vaisseau,spawns.listeOvnis, shoot.listeMissiles ,spawns.listAsteroides, shoot.listMine, shoot.listLaser ,spawns.listPU, level.niveau, player, playerControl, aireDeJeu)    #TODO ajouter collision avec powerup
@@ -144,8 +141,7 @@ if __name__ == "__main__":
             # FIN DE PARTIE
 
             # boocler la fenetre tk
-            verif.verifHP(player, jeu)
-            verif.verifGameOver(jeu, aireDeJeu)
+            verif.verifHP(player, jeu, aireDeJeu)
             root.mainloop()
 
             

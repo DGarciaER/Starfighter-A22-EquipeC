@@ -20,119 +20,123 @@ class Mouvement(tk.Frame):
 
 
     
-    def moveVaisseau(self, vaisseau, aireDeJeu,e):
+    def moveVaisseau(self, vaisseau, aireDeJeu, jeu,e):
         """Methode qui permet le mouvement du vaisseau lorsque la souris se deplace"""
-
-        # Récupérer l'image de Vaisseau et reduire sa taille avec la méthode subsample
-        self.imageV = tk.PhotoImage(file='Images/Vaisseau.png').subsample(12,12)
-        # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
-        aireDeJeu.canva.create_image(e.x,e.y, image=self.imageV)
-        # Setter la position de vaiseau dans l'objet vaiseau
-        vaisseau.setPositions(e.x,e.y)
+        if not jeu.gameOver:
+            # Récupérer l'image de Vaisseau et reduire sa taille avec la méthode subsample
+            self.imageV = tk.PhotoImage(file='Images/Vaisseau.png').subsample(12,12)
+            # Créer une instance de Vaisseau et l'afficher dans l'aire de jeu en lui donnant une position x, y
+            aireDeJeu.canva.create_image(e.x,e.y, image=self.imageV)
+            # Setter la position de vaiseau dans l'objet vaiseau
+            vaisseau.setPositions(e.x,e.y)
 
     
-    def mouvMissiles(self, aireDeJeu, listeMissiles, timerMoveMissile):
+    def mouvMissiles(self, aireDeJeu, listeMissiles, timerMoveMissile, jeu):
         """Methode qui permet le mouvement des missiles"""
 
-        #Boucle for each qui va passer dans la liste des missiles qui existent deja
-        for missile in listeMissiles:
-            aireDeJeu.canva.move(missile.instanceMissile, 0, -10)
-            missile.y -=10
+        if not jeu.gameOver:
+            #Boucle for each qui va passer dans la liste des missiles qui existent deja
+            for missile in listeMissiles:
+                aireDeJeu.canva.move(missile.instanceMissile, 0, -10)
+                missile.y -=10
 
-            #Si le missile depasse la partie en haut de l'aire de jeu (y <= 0), supprimer le missile, pour eviter de se retrouver avec plein de missiles.
-            if missile.y <= 0:
-                aireDeJeu.canva.delete(missile.instanceMissile)
-                listeMissiles.remove(missile)
-        
-        #Timer threads
-        mouvMissileTimer = Timer(timerMoveMissile,partial(self.mouvMissiles,aireDeJeu, listeMissiles, timerMoveMissile))
-        mouvMissileTimer.start()
+                #Si le missile depasse la partie en haut de l'aire de jeu (y <= 0), supprimer le missile, pour eviter de se retrouver avec plein de missiles.
+                if missile.y <= 0:
+                    aireDeJeu.canva.delete(missile.instanceMissile)
+                    listeMissiles.remove(missile)
+            
+            #Timer threads
+            mouvMissileTimer = Timer(timerMoveMissile,partial(self.mouvMissiles,aireDeJeu, listeMissiles, timerMoveMissile, jeu))
+            mouvMissileTimer.start()
 
     
-    def moveOvnis(self, timerMoveOvnis, vitesseOvniY,vitesseOvniX, listeOvnis, aireDeJeu):
+    def moveOvnis(self, timerMoveOvnis, vitesseOvniY,vitesseOvniX, listeOvnis, aireDeJeu, jeu):
         """Methode qui permet le mouvement des ovnis"""
-        
-        vitesseHorizontalDroite = vitesseOvniX
-        vitesseHorizontalGauche = -vitesseOvniX
+        if not jeu.gameOver:
+            vitesseHorizontalDroite = vitesseOvniX
+            vitesseHorizontalGauche = -vitesseOvniX
 
-        for ovn in listeOvnis: # forEach qui passe dans toute la list listAsteroide
-                
-                ovn.y += vitesseOvniY
-                if(ovn.x >= 400):               # Si x >= 400, ca veut dire que l'ovni est a gauche de l'aire de jeu.
-                    ovn.direction = "left"      # On s'en sert en bas pour definir si il faut bouger l'ovni a gauche ou a droite
+            for ovn in listeOvnis: # forEach qui passe dans toute la list listAsteroide
+                    
+                    ovn.y += vitesseOvniY
+                    if(ovn.x >= 400):               # Si x >= 400, ca veut dire que l'ovni est a gauche de l'aire de jeu.
+                        ovn.direction = "left"      # On s'en sert en bas pour definir si il faut bouger l'ovni a gauche ou a droite
 
-                elif(ovn.x <= 5):               # Si x >= 400, ca veut dire que l'ovni est a gauche de l'aire de jeu.
-                    ovn.direction = "right"     # On s'en sert en bas pour definir si il faut bouger l'ovni a gauche ou a droite
+                    elif(ovn.x <= 5):               # Si x >= 400, ca veut dire que l'ovni est a gauche de l'aire de jeu.
+                        ovn.direction = "right"     # On s'en sert en bas pour definir si il faut bouger l'ovni a gauche ou a droite
 
-                if(ovn.direction == "right"):
-                    aireDeJeu.canva.move(ovn.instanceOvni,vitesseHorizontalDroite ,vitesseOvniY)#deplacement de l'ovnis en x = 0, y = 2
-                    ovn.x += vitesseHorizontalDroite
-                else:
-                    aireDeJeu.canva.move(ovn.instanceOvni,vitesseHorizontalGauche ,vitesseOvniY)#deplacement de l'ovnis en x = 0, y = 2
-                    ovn.x += vitesseHorizontalGauche
+                    if(ovn.direction == "right"):
+                        aireDeJeu.canva.move(ovn.instanceOvni,vitesseHorizontalDroite ,vitesseOvniY)#deplacement de l'ovnis en x = 0, y = 2
+                        ovn.x += vitesseHorizontalDroite
+                    else:
+                        aireDeJeu.canva.move(ovn.instanceOvni,vitesseHorizontalGauche ,vitesseOvniY)#deplacement de l'ovnis en x = 0, y = 2
+                        ovn.x += vitesseHorizontalGauche
 
-                
-                # Si y >= 500, veut dire que l'ovni est en dehors de l'aire de jeu, donc on supprime
-                if ovn.y >= 600:
-                    aireDeJeu.canva.delete(ovn.instanceOvni)
-                    listeOvnis.remove(ovn)
-        
-        mouvOvniTimer = Timer(timerMoveOvnis, partial(self.moveOvnis, timerMoveOvnis, vitesseOvniY,vitesseOvniX, listeOvnis, aireDeJeu))
-        mouvOvniTimer.start()
+                    
+                    # Si y >= 500, veut dire que l'ovni est en dehors de l'aire de jeu, donc on supprime
+                    if ovn.y >= 600:
+                        aireDeJeu.canva.delete(ovn.instanceOvni)
+                        listeOvnis.remove(ovn)
+            
+            mouvOvniTimer = Timer(timerMoveOvnis, partial(self.moveOvnis, timerMoveOvnis, vitesseOvniY,vitesseOvniX, listeOvnis, aireDeJeu, jeu))
+            mouvOvniTimer.start()
 
     
-    def moveAsteroide(self,timerMoveAsteroide, listAsteroide, aireDeJeu):
+    def moveAsteroide(self,timerMoveAsteroide, listAsteroide, aireDeJeu, jeu):
         """Methode qui permet le mouvement des asteroides"""
         
-        for aste in listAsteroide: # forEach qui passe dans toute la list listAsteroide
+        if not jeu.gameOver:
+            for aste in listAsteroide: # forEach qui passe dans toute la list listAsteroide
 
-            if aste.direction == "bas-droit":
-                aireDeJeu.canva.move(aste.instanceAsteroide,5 ,5)
-                aste.y += 5
-                aste.x += 5
+                if aste.direction == "bas-droit":
+                    aireDeJeu.canva.move(aste.instanceAsteroide,5 ,5)
+                    aste.y += 5
+                    aste.x += 5
 
-            elif aste.direction == "bas-gauche":
-                aireDeJeu.canva.move(aste.instanceAsteroide,-5 ,5)
-                aste.y += 5
-                aste.x -= 5
+                elif aste.direction == "bas-gauche":
+                    aireDeJeu.canva.move(aste.instanceAsteroide,-5 ,5)
+                    aste.y += 5
+                    aste.x -= 5
 
 
-            if aste.y >= 500:
-                aireDeJeu.canva.delete(aste.instanceAsteroide)
-                listAsteroide.remove(aste)
-            
-        mouvAsteroideTimer = Timer(timerMoveAsteroide, partial(self.moveAsteroide, timerMoveAsteroide, listAsteroide, aireDeJeu))
-        mouvAsteroideTimer.start()
+                if aste.y >= 500:
+                    aireDeJeu.canva.delete(aste.instanceAsteroide)
+                    listAsteroide.remove(aste)
+                
+            mouvAsteroideTimer = Timer(timerMoveAsteroide, partial(self.moveAsteroide, timerMoveAsteroide, listAsteroide, aireDeJeu, jeu))
+            mouvAsteroideTimer.start()
 
-    def mouvMines(self,listeMine, aireDeJeu):
-        vitesseMine = 3
-        for mine in listeMine:
-            aireDeJeu.canva.move(mine.instanceMine,0 ,vitesseMine)#deplacement de l'ovnis en x = 0, y = 2
-            mine.y += vitesseMine
-            
-            if mine.y >= 600:
-                aireDeJeu.canva.delete(mine.instanceMine)
-                listeMine.remove(mine)
+    def mouvMines(self,listeMine, aireDeJeu, jeu):
+        if not jeu.gameOver:
+            vitesseMine = 3
+            for mine in listeMine:
+                aireDeJeu.canva.move(mine.instanceMine,0 ,vitesseMine)#deplacement de l'ovnis en x = 0, y = 2
+                mine.y += vitesseMine
+                
+                if mine.y >= 600:
+                    aireDeJeu.canva.delete(mine.instanceMine)
+                    listeMine.remove(mine)
 
-        mouvMineTimer = Timer(0.03, partial(self.mouvMines, listeMine, aireDeJeu))
-        mouvMineTimer.start()
+            mouvMineTimer = Timer(0.03, partial(self.mouvMines, listeMine, aireDeJeu, jeu))
+            mouvMineTimer.start()
 
     
-    def movePowerUp(self, timerMovePU, vitessePU, listePU, aireDeJeu):
+    def movePowerUp(self, timerMovePU, vitessePU, listePU, aireDeJeu, jeu):
         """Methode qui permet le mouvement des powerup"""
 
-        for pu in listePU: # forEach qui passe dans toute la list listAsteroide
-                
-            pu.y += vitessePU
+        if not jeu.gameOver:
+            for pu in listePU: # forEach qui passe dans toute la list listAsteroide
+                    
+                pu.y += vitessePU
 
-            aireDeJeu.canva.move(pu.instancePU, 0,vitessePU)
-                
-            if pu.y >= 600:
-                aireDeJeu.canva.delete(pu.instancePU)
-                listePU.remove(pu)
-        
-        mouvPUTimer = Timer(timerMovePU, partial(self.movePowerUp, timerMovePU, vitessePU, listePU, aireDeJeu))
-        mouvPUTimer.start()
+                aireDeJeu.canva.move(pu.instancePU, 0,vitessePU)
+                    
+                if pu.y >= 600:
+                    aireDeJeu.canva.delete(pu.instancePU)
+                    listePU.remove(pu)
+            
+            mouvPUTimer = Timer(timerMovePU, partial(self.movePowerUp, timerMovePU, vitessePU, listePU, aireDeJeu, jeu))
+            mouvPUTimer.start()
 
 
 
@@ -171,12 +175,13 @@ class Shoot(tk.Frame):
             aireDeJeu.canva.after(1000, partial(self.deleteLaser, aireDeJeu))
             aireDeJeu.canva.after(5000, partial(self.resetLaserCooldown, vaisseau))
 
-    def shootMine(self,timerShootMine, listeOvnis, aireDeJeu):
-        for ovni in listeOvnis:
-            self.listMine.append(Mine(aireDeJeu, ovni.x + 26, ovni.y + 20))
+    def shootMine(self,timerShootMine, listeOvnis, aireDeJeu, jeu):
+        if not jeu.gameOver:
+            for ovni in listeOvnis:
+                self.listMine.append(Mine(aireDeJeu, ovni.x + 26, ovni.y + 20))
 
-        shootMineTimer = Timer(timerShootMine, partial(self.shootMine, timerShootMine, listeOvnis, aireDeJeu))
-        shootMineTimer.start()
+            shootMineTimer = Timer(timerShootMine, partial(self.shootMine, timerShootMine, listeOvnis, aireDeJeu, jeu))
+            shootMineTimer.start()
 
     def resetLaserCooldown(self, vaisseau):
         vaisseau.laserCooldown = False
@@ -229,8 +234,9 @@ class Spawns(tk.Frame):
         self.listAsteroides = []
         self.listPU = []
 
+
     '''methode pour creer des ovnis avec une postion x aleatoire'''
-    def createOvnis(self, timerCreateOvnis, aireDeJeu):
+    def createOvnis(self, timerCreateOvnis, aireDeJeu, jeu):
 
         if random.randint(0,1) == 0:
             # on fait partir l'ovnis a gauche
@@ -241,11 +247,12 @@ class Spawns(tk.Frame):
             x = random.randint(250,425)
             self.listeOvnis.append(Ovni(aireDeJeu,x,-40))
 
-        createOvniTimer = Timer(timerCreateOvnis, partial(self.createOvnis, timerCreateOvnis, aireDeJeu))#cree un ovnis a chaque 3s
-        createOvniTimer.start()
+        if not jeu.gameOver:
+            createOvniTimer = Timer(timerCreateOvnis, partial(self.createOvnis, timerCreateOvnis, aireDeJeu, jeu))#cree un ovnis a chaque 3s
+            createOvniTimer.start()
 
     """Methode qui creer un asteroide et l'ajoute a la listAsteroide"""
-    def createAsteroide(self,timerCreateAsteroide, aireDeJeu):
+    def createAsteroide(self,timerCreateAsteroide, aireDeJeu, jeu):
         
         if random.randint(0,1) == 0:
             # on fait partir l'asteroide a gauche
@@ -257,12 +264,12 @@ class Spawns(tk.Frame):
             x = random.randint(250,425)
             self.listAsteroides.append(Asteroide(aireDeJeu,x,-40,"bas-gauche"))
 
-
-        createAstroideTimer = Timer(timerCreateAsteroide, partial(self.createAsteroide, timerCreateAsteroide, aireDeJeu))
-        createAstroideTimer.start()
+        if not jeu.gameOver:
+            createAstroideTimer = Timer(timerCreateAsteroide, partial(self.createAsteroide, timerCreateAsteroide, aireDeJeu, jeu))
+            createAstroideTimer.start()
 
     '''methode pour creer des powerup avec une postion x aleatoire'''
-    def createPU(self, timerCreatePU, aireDeJeu):
+    def createPU(self, timerCreatePU, aireDeJeu, jeu):
 
         if random.randint(0,1) == 0:
             # on fait partir le powerup a gauche
@@ -273,8 +280,9 @@ class Spawns(tk.Frame):
             x = random.randint(250,425)
             self.listPU.append(PowerUp(aireDeJeu,x,-40))
 
-        createPUTimer = Timer(timerCreatePU, partial(self.createPU, timerCreatePU, aireDeJeu))  #cree un powerup a chaque n secondes
-        createPUTimer.start()
+        if not jeu.gameOver:
+            createPUTimer = Timer(timerCreatePU, partial(self.createPU, timerCreatePU, aireDeJeu, jeu))  #cree un powerup a chaque n secondes
+            createPUTimer.start()
 
 class Collision:
 
@@ -577,25 +585,30 @@ class Verification():
     def __init__(self):
         pass
 
-    def verifHP(self, player, jeu):
+    def verifHP(self, player, jeu, aireDeJeu):
         '''
         Methode qui s'occupe de verifier les points de vies.
         '''
         if player.hp <= 0:          # Si les points de vie de l'utilisateur est <= 0.
             jeu.gameOver = True     # la partie est fini
             print(jeu.gameOver)
+            self.verifGameOver(jeu, aireDeJeu)
         else:
             #Thread pour appeler la methode chaque 0.03 secondes
-            verifHpTimer = Timer(0.03, partial(self.verifHP, player, jeu))
+            verifHpTimer = Timer(0.03, partial(self.verifHP, player, jeu, aireDeJeu))
             verifHpTimer.start()
         
 
-    def verifGameOver(self, jeu, aireDeJeu):
-        if jeu.gameOver == True:
-            aireDeJeu.canva.configure(bg="black")
-            aireDeJeu.imageBackground = None
+    def verifGameOver(self,jeu, aireDeJeu):
+        aireDeJeu.canva.configure(bg="black")
+        aireDeJeu.imageBackground = None
+        aireDeJeu.canva.delete("all")
+        textGameOver = aireDeJeu.canva.create_text(10, 10, text='   Game Over  ', anchor=tk.NW, font=('Modern', 50, 'bold'), fill='white')
+        aireDeJeu.canva.config(cursor="arrow")
+        jeu.pauseTimer()
 
-        else:
-            verifGameOverTimer = Timer(0.03, partial(self.verifGameOver, jeu, aireDeJeu))
-            verifGameOverTimer.start()
-            
+        # textGameOver.grid(column=1, row=1, padx=20)
+
+        # backScreen = tk.Canvas(aireDeJeu, width=450, height=500)
+        # backScreen.config(bg="black")
+        # backScreen.pack()
