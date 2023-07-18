@@ -19,7 +19,7 @@ if __name__ == "__main__":
     choix = Choix()
     choix.afficherChoixLevel(menu, level, jeu)
 
-    print("hello")
+   
 
     def commencerJeu():
         print(menu.commence)
